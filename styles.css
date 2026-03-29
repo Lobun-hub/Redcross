@@ -344,7 +344,9 @@
     .member-info h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
     .member-info .role { font-size: 0.82rem; color: var(--red); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
-    /* ── GALLERY ── */
+  
+
+    /* ── GALLERY ──  */
     #gallery { background: var(--off-white); }
     .gallery-grid {
       display: grid;
@@ -355,12 +357,26 @@
     .gallery-item {
       border-radius: 8px; overflow: hidden;
       aspect-ratio: 1;
-      background: linear-gradient(135deg, var(--red-dark), var(--red-light));
       position: relative;
       cursor: pointer;
       transition: transform 0.25s;
+      background: none;
     }
-    .gallery-item:first-child { grid-column: span 2; grid-row: span 2; aspect-ratio: auto; min-height: 300px; }
+    .gallery-item img {
+      width: 100%; height: 100%; display: block;
+      object-fit: cover; object-position: center;
+    }
+    .gallery-item:first-child {
+      grid-column: span 2;
+      grid-row: span 2;
+      aspect-ratio: auto;
+      min-height: auto;
+      align-self: start;
+    }
+    .gallery-item:first-child img {
+      height: auto;
+      object-fit: contain;
+    }
     .gallery-item:hover { transform: scale(1.02); }
     .gallery-item .overlay {
       position: absolute; inset: 0;
@@ -378,7 +394,7 @@
       transform: translateY(100%); transition: transform 0.25s;
     }
     .gallery-item:hover .gallery-label { transform: translateY(0); }
-    /* Decorative icons inside gallery items */
+    /* Decorative icons inside gallery items*/
     .gallery-icon {
       position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
       font-size: 3.5rem; opacity: 0.25;
