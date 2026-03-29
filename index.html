@@ -334,20 +334,19 @@
       background: var(--off-white); border-radius: 10px; overflow: hidden;
       text-align: center; transition: transform 0.25s;
       opacity: 1; visibility: visible;
-    }
-    .member-card:hover { transform: translateY(-4px); }
-    .member-avatar {
-      width: 100%; height: 180px;
-      background: linear-gradient(135deg, var(--red-dark), var(--red-light));
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Playfair Display', serif;
-      font-size: 3rem; font-weight: 900; color: rgba(255,255,255,0.6);
       position: relative;
     }
-    .member-avatar::after {
+    .member-card:hover { transform: translateY(-4px); }
+    .member-card::after {
       content: '';
       position: absolute; bottom: 0; left: 0; right: 0;
       height: 4px; background: var(--red);
+    }
+    .member-avatar {
+      width: 100%; height: 180px;
+      display: block;
+      object-fit: cover;
+      object-position: center;
     }
     .member-info { padding: 20px 16px; }
     .member-info h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
@@ -713,63 +712,63 @@
   <p class="section-sub">Dedicated student leaders committed to humanitarian service and the growth of the chapter.</p>
   <div class="team-grid">
     <div class="member-card reveal">
-      <div class="member-avatar">CJ</div>
+      <img class="member-avatar" src="images/chairperson.jpg" alt="Chairperson - Dennis Kiptanui" />
       <div class="member-info">
         <h3>Chairperson</h3>
         <div class="role">DENNIS KIPTANUI</div>
       </div>
     </div>
     <div class="member-card reveal">
-      <div class="member-avatar">VC</div>
+      <img class="member-avatar" src="images/vice-chairperson.jpg" alt="Vice Chairperson - Ian Kamau" />
       <div class="member-info">
         <h3>Vice Chairperson</h3>
         <div class="role">IAN KAMAU</div>
       </div>
     </div>
     <div class="member-card reveal">
-      <div class="member-avatar">SC</div>
+      <img class="member-avatar" src="images/secretary.jpg" alt="Secretary - Mary Kahora" />
       <div class="member-info">
         <h3>Secretary</h3>
         <div class="role">MARY KAHORA</div>
       </div>
     </div>
     <div class="member-card reveal">
-      <div class="member-avatar">TR</div>
+      <img class="member-avatar" src="images/treasurer.jpg" alt="Treasurer - Tabitha Cherotich" />
       <div class="member-info">
         <h3>Treasurer</h3>
         <div class="role">TABITHA CHEROTICH</div>
       </div>
     </div>
     <div class="member-card reveal">
-      <div class="member-avatar">FA</div>
+      <img class="member-avatar" src="images/first-aid-officer.jpg" alt="First Aid Officer - Kennedy Macharia" />
       <div class="member-info">
         <h3>First Aid Officer</h3>
         <div class="role">KENNEDY MACHARIA</div>
       </div>
     </div>
     <div class="member-card reveal">
-      <div class="member-avatar">PR</div>
+      <img class="member-avatar" src="images/assistant-first-aid-officer.jpg" alt="Asst. First Aid Officer - Francis Lobun" />
       <div class="member-info">
         <h3>Asst. First Aid Officer</h3>
         <div class="role">FRANCIS LOBUN</div>
       </div>
     </div>
     <div class="member-card reveal">
-      <div class="member-avatar">OS</div>
+      <img class="member-avatar" src="images/organising-secretary.jpg" alt="Organising Secretary - Amos Maliro" />
       <div class="member-info">
         <h3>Organising Secretary</h3>
         <div class="role">AMOS MALIRO</div>
       </div>
     </div>
     <div class="member-card reveal">
-      <div class="member-avatar">DS</div>
+      <img class="member-avatar" src="images/dissemination-officer.jpg" alt="Dissemination Officer - Holinda Kiarie" />
       <div class="member-info">
         <h3>DISEMINATION OFFICER</h3>
         <div class="role">HOLINDA KIARIE</div>
       </div>
     </div>
     <div class="member-card reveal">
-      <div class="member-avatar">IT</div>
+      <img class="member-avatar" src="images/it-personnel.jpg" alt="IT Personnel - Orange" />
       <div class="member-info">
         <h3>IT Personnel</h3>
         <div class="role">ORANGE</div>
