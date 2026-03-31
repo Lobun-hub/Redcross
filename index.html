@@ -10,6 +10,10 @@
   <link href="images/favicon.jpg" rel="icon" type="image/png"/>
   <link rel="stylesheet" href="styles.css" />
   <style>
+    /* ── FIX: kill any red background from styles.css bleeding into hero ── */
+    #hero { background: transparent !important; padding: 0 !important; margin: 0 !important; }
+    #hero .hero-wrapper { margin-top: 0; }
+
     /* ── SWIPER HERO OVERRIDES ── */
     #hero { padding: 0; margin: 0; }
 
@@ -356,34 +360,165 @@
 </section>
 
 <!-- GALLERY -->
-<section id="gallery">
-  <div class="section-label">Our Moments</div>
-  <h2 class="section-title">Gallery</h2>
-  <p class="section-sub">A glimpse into our activities, events, and the lives we touch across the campus and community.</p>
-  <div class="gallery-grid">
-    <div class="gallery-item">
-      <img src="images/Executive.png" alt="Executive Team" />
-      <div class="gallery-label">The Executive Team</div>
+<section id="gallery" class="gallery-section">
+  <div class="gallery-header">
+    <div class="section-label">Our Moments</div>
+    <h2 class="section-title">Gallery</h2>
+    <p class="section-sub">A glimpse into our activities, events, and the lives we touch across the campus and community.</p>
+
+    <!-- Filter tabs -->
+    <div class="gallery-filters">
+      <button class="gf-btn active" data-filter="all">All</button>
+      <button class="gf-btn" data-filter="team">Team</button>
+      <button class="gf-btn" data-filter="outreach">Outreach</button>
+      <button class="gf-btn" data-filter="events">Events</button>
     </div>
-    <div class="gallery-item">
-      <img src="images/Red Cross Team.png" alt="Donation Drive" />
-      <div class="gallery-label">Blood Donation Drive</div>
+  </div>
+
+  <!-- Masonry grid -->
+  <div class="masonry-grid" id="masonryGrid">
+    <div class="masonry-item tall" data-cat="team">
+      <img src="images/Executive.png" alt="Executive Team" loading="lazy"/>
+      <div class="masonry-overlay">
+        <span class="masonry-icon">⊕</span>
+        <div class="masonry-info">
+          <span class="masonry-tag">Team</span>
+          <h4>The Executive Team</h4>
+        </div>
+      </div>
     </div>
-    <div class="gallery-item">
-      <img src="images/community.jpeg" alt="Community Outreach" />
-      <div class="gallery-label">Community Outreach</div>
+    <div class="masonry-item" data-cat="outreach">
+      <img src="images/Red Cross Team.png" alt="Donation Drive" loading="lazy"/>
+      <div class="masonry-overlay">
+        <span class="masonry-icon">⊕</span>
+        <div class="masonry-info">
+          <span class="masonry-tag">Outreach</span>
+          <h4>Blood Donation Drive</h4>
+        </div>
+      </div>
     </div>
-    <div class="gallery-item">
-      <img src="images/Awareness.jpeg" alt="Campus Awareness Week" />
-      <div class="gallery-label">Campus Awareness Week</div>
+    <div class="masonry-item wide" data-cat="outreach">
+      <img src="images/community.jpeg" alt="Community Outreach" loading="lazy"/>
+      <div class="masonry-overlay">
+        <span class="masonry-icon">⊕</span>
+        <div class="masonry-info">
+          <span class="masonry-tag">Outreach</span>
+          <h4>Community Outreach</h4>
+        </div>
+      </div>
     </div>
-    <div class="gallery-item">
-      <img src="images/gallery-leadership-workshop.jpg" alt="Leadership Workshop" />
-      <div class="overlay"><span>🔍</span></div>
-      <div class="gallery-label">Leadership Workshop</div>
+    <div class="masonry-item" data-cat="events">
+      <img src="images/Awareness.jpeg" alt="Campus Awareness Week" loading="lazy"/>
+      <div class="masonry-overlay">
+        <span class="masonry-icon">⊕</span>
+        <div class="masonry-info">
+          <span class="masonry-tag">Events</span>
+          <h4>Campus Awareness Week</h4>
+        </div>
+      </div>
+    </div>
+    <div class="masonry-item tall" data-cat="events">
+      <img src="images/gallery-leadership-workshop.jpg" alt="Leadership Workshop" loading="lazy"/>
+      <div class="masonry-overlay">
+        <span class="masonry-icon">⊕</span>
+        <div class="masonry-info">
+          <span class="masonry-tag">Events</span>
+          <h4>Leadership Workshop</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lb-close" id="lbClose">✕</button>
+    <button class="lb-arrow lb-prev" id="lbPrev">&#8592;</button>
+    <button class="lb-arrow lb-next" id="lbNext">&#8594;</button>
+    <div class="lb-img-wrap">
+      <img id="lbImg" src="" alt=""/>
+      <div class="lb-caption" id="lbCaption"></div>
     </div>
   </div>
 </section>
+
+<style>
+  .gallery-section { padding: 80px 60px; background: #f8f8f8; }
+  .gallery-header { text-align: center; margin-bottom: 48px; }
+
+  .gallery-filters { display: flex; gap: 10px; justify-content: center; margin-top: 28px; flex-wrap: wrap; }
+  .gf-btn {
+    padding: 9px 24px; border: 2px solid #ddd; background: #fff;
+    border-radius: 30px; font-weight: 700; font-size: 13px; cursor: pointer;
+    color: #555; transition: all 0.25s;
+  }
+  .gf-btn:hover, .gf-btn.active { background: #ed1c24; border-color: #ed1c24; color: #fff; }
+
+  .masonry-grid { columns: 3; column-gap: 16px; }
+  .masonry-item {
+    break-inside: avoid; margin-bottom: 16px;
+    position: relative; overflow: hidden;
+    border-radius: 10px; cursor: pointer;
+  }
+  .masonry-item.tall img  { aspect-ratio: 3/4; }
+  .masonry-item img {
+    width: 100%; display: block;
+    object-fit: cover; aspect-ratio: 4/3;
+    border-radius: 10px; transition: transform 0.5s ease;
+  }
+  .masonry-item:hover img { transform: scale(1.06); }
+
+  .masonry-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(14,20,34,0.85) 0%, rgba(14,20,34,0.0) 55%);
+    border-radius: 10px;
+    display: flex; flex-direction: column;
+    justify-content: space-between; align-items: center;
+    padding: 20px; opacity: 0; transition: opacity 0.35s ease;
+  }
+  .masonry-item:hover .masonry-overlay { opacity: 1; }
+  .masonry-icon {
+    font-size: 28px; color: #fff;
+    width: 48px; height: 48px;
+    background: rgba(237,28,36,0.85); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .masonry-info { width: 100%; }
+  .masonry-tag {
+    display: inline-block; background: #ed1c24; color: #fff;
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 6px;
+  }
+  .masonry-info h4 { color: #fff; font-size: 15px; font-weight: 700; margin: 0; }
+  .masonry-item.hidden { display: none; }
+
+  .lightbox {
+    display: none; position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.93);
+    align-items: center; justify-content: center;
+  }
+  .lightbox.open { display: flex; }
+  .lb-img-wrap { position: relative; max-width: 85vw; max-height: 85vh; text-align: center; }
+  .lb-img-wrap img { max-width: 100%; max-height: 80vh; border-radius: 8px; display: block; margin: 0 auto; }
+  .lb-caption { color: rgba(255,255,255,0.8); font-size: 14px; margin-top: 12px; }
+  .lb-close {
+    position: absolute; top: 20px; right: 24px;
+    background: none; border: none; color: #fff; font-size: 28px; cursor: pointer; z-index: 2;
+  }
+  .lb-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(255,255,255,0.1); border: none; color: #fff;
+    font-size: 22px; padding: 12px 16px; cursor: pointer; border-radius: 4px; transition: background 0.2s;
+  }
+  .lb-arrow:hover { background: #ed1c24; }
+  .lb-prev { left: 16px; }
+  .lb-next { right: 16px; }
+
+  @media (max-width: 768px) {
+    .gallery-section { padding: 60px 20px; }
+    .masonry-grid { columns: 2; }
+  }
+  @media (max-width: 480px) { .masonry-grid { columns: 1; } }
+</style>
 
 <!-- CONTACT -->
 <section id="contact">
@@ -506,6 +641,73 @@
     }
   });
 </script>
+
+<script>
+  // Gallery Filter
+  const gfBtns = document.querySelectorAll('.gf-btn');
+  const mItems = document.querySelectorAll('.masonry-item');
+  gfBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      gfBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      mItems.forEach(item => {
+        if (filter === 'all' || item.dataset.cat === filter) {
+          item.classList.remove('hidden');
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+    });
+  });
+
+  // Lightbox
+  const lightbox = document.getElementById('lightbox');
+  const lbImg    = document.getElementById('lbImg');
+  const lbCap    = document.getElementById('lbCaption');
+  let lbItems = [], lbIdx = 0;
+
+  function openLightbox(items, idx) {
+    lbItems = items; lbIdx = idx;
+    showLbItem(lbIdx);
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function showLbItem(i) {
+    const item = lbItems[i];
+    lbImg.src = item.querySelector('img').src;
+    lbCap.textContent = item.querySelector('h4').textContent;
+  }
+  mItems.forEach((item, i) => {
+    item.addEventListener('click', () => {
+      const visible = Array.from(mItems).filter(m => !m.classList.contains('hidden'));
+      const vIdx = visible.indexOf(item);
+      openLightbox(visible, vIdx);
+    });
+  });
+  document.getElementById('lbClose').onclick = () => {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+  document.getElementById('lbPrev').onclick = () => {
+    lbIdx = (lbIdx - 1 + lbItems.length) % lbItems.length;
+    showLbItem(lbIdx);
+  };
+  document.getElementById('lbNext').onclick = () => {
+    lbIdx = (lbIdx + 1) % lbItems.length;
+    showLbItem(lbIdx);
+  };
+  lightbox.addEventListener('click', e => {
+    if (e.target === lightbox) { lightbox.classList.remove('open'); document.body.style.overflow = ''; }
+  });
+  document.addEventListener('keydown', e => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'ArrowLeft')  { lbIdx = (lbIdx - 1 + lbItems.length) % lbItems.length; showLbItem(lbIdx); }
+    if (e.key === 'ArrowRight') { lbIdx = (lbIdx + 1) % lbItems.length; showLbItem(lbIdx); }
+    if (e.key === 'Escape')     { lightbox.classList.remove('open'); document.body.style.overflow = ''; }
+  });
+</script>
+
 <script src="script.js"></script>
 </body>
 </html>
