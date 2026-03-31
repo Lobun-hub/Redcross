@@ -1,220 +1,485 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Kirinyaga University Red Cross Chapter</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Red+Hat+Display:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,500;0,600;0,700&family=Red+Hat+Display:ital,wght@0,400;0,700;0,800;0,900;1,700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <link href="images/favicon.jpg" rel="icon" type="image/png"/>
-  <link rel="stylesheet" href="styles.css" />
+
   <style>
-    /* ── FIX: kill any red background from styles.css bleeding into hero ── */
-    #hero { background: transparent !important; padding: 0 !important; margin: 0 !important; }
-    #hero .hero-wrapper { margin-top: 0; }
+  :root {
+    --red:    #ed1c24;
+    --dark:   #0e1422;
+    --gray:   #f4f4f4;
+    --text:   #444;
+    --white:  #fff;
+  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: "Nunito Sans", sans-serif; color: var(--dark); background: #fff; }
+  a { text-decoration: none; color: inherit; }
+  img { max-width: 100%; }
 
-    /* ── SWIPER HERO OVERRIDES ── */
-    #hero { padding: 0; margin: 0; }
+  /* ─── TOP BAR ─── */
+  .top-bar {
+    background: var(--dark); color: rgba(255,255,255,.75);
+    font-size: 13px; padding: 0 40px; height: 40px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .top-bar a { color: rgba(255,255,255,.75); transition: color .2s; }
+  .top-bar a:hover { color: var(--red); }
+  .top-bar .tb-left { display: flex; gap: 24px; align-items: center; }
+  .top-bar .tb-left span { display: flex; align-items: center; gap: 6px; }
+  .top-bar .tb-right { display: flex; gap: 14px; align-items: center; }
+  .top-bar .tb-right a { font-size: 14px; }
 
-    .hero-wrapper {
-      position: relative;
-      width: 100%;
-      height: calc(100vh - 80px);
-      min-height: 600px;
-      overflow: hidden;
-    }
-    .hero-swiper { width: 100%; height: 100%; }
-    .swiper-wrapper-hero, .hero-swiper .swiper-slide { width: 100%; height: 100%; }
-    .hero-slide { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: 'Nunito Sans', sans-serif; }
+  /* ─── NAVBAR ─── */
+  .navbar {
+    background: #fff; height: 80px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    position: sticky; top: 0; z-index: 200;
+    transition: box-shadow .3s;
+  }
+  .navbar.scrolled { box-shadow: 0 4px 20px rgba(0,0,0,.14); }
+  .nav-logo img { height: 56px; }
+  .nav-links { list-style: none; display: flex; gap: 4px; align-items: center; }
+  .nav-links > li { position: relative; }
+  .nav-links > li > a {
+    display: block; padding: 10px 14px; font-weight: 700; font-size: 14px;
+    color: var(--dark); border-radius: 4px; transition: color .2s;
+    position: relative;
+  }
+  .nav-links > li > a::after {
+    content:""; position:absolute; bottom:6px; left:14px; right:14px; height:2px;
+    background: var(--red); transform: scaleX(0); transition: transform .25s; border-radius:2px;
+  }
+  .nav-links > li > a:hover, .nav-links > li > a.active { color: var(--red); }
+  .nav-links > li > a:hover::after, .nav-links > li > a.active::after { transform: scaleX(1); }
+  .nav-donate {
+    background: var(--red); color: #fff !important; padding: 10px 26px !important;
+    border-radius: 4px; font-weight: 700 !important; font-size: 14px !important;
+    transition: background .2s !important;
+  }
+  .nav-donate:hover { background: #b00f0f !important; }
+  .nav-donate::after { display: none !important; }
+  .hamburger { display:none; background: var(--red); border:none; color:#fff; font-size:20px; padding:8px 12px; border-radius:4px; cursor:pointer; }
 
-    .slide-bg {
-      position: absolute;
-      top: -10%; left: -10%; right: -10%; bottom: -10%;
-      background-size: cover; background-position: center;
-      transform: scale(1.12);
-    }
-    .hero-swiper .swiper-slide-active .slide-bg { animation: hKenburns 10s ease-out forwards; }
-    @keyframes hKenburns {
-      0%   { transform: scale(1.12); }
-      100% { transform: scale(1.0); }
-    }
-    .slide-bg::after {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(to right, rgba(14,20,34,0.88) 0%, rgba(14,20,34,0.60) 45%, rgba(14,20,34,0.10) 100%);
-    }
+  /* ─── MOBILE NAV ─── */
+  .mobile-nav {
+    position:fixed; top:0; left:0; width:100%; height:100%; background:var(--dark);
+    z-index:999; display:flex; flex-direction:column; padding:60px 32px 32px;
+    transform: translateX(-100%); transition: transform .35s ease;
+  }
+  .mobile-nav.open { transform: translateX(0); }
+  .mobile-nav .close-btn { position:absolute; top:16px; right:20px; background:none; border:none; color:#fff; font-size:28px; cursor:pointer; }
+  .mobile-nav a { color:rgba(255,255,255,.85); font-size:18px; font-weight:700; padding:14px 0; border-bottom:1px solid rgba(255,255,255,.08); }
+  .mobile-nav a:hover { color: var(--red); }
 
-    .slide-person {
-      position: absolute; right: 0; bottom: 0;
-      height: 100%; width: 70%;
-      background-image: var(--person-img);
-      background-size: contain; background-repeat: no-repeat; background-position: right bottom;
-      z-index: 1;
-      filter: brightness(1.02) contrast(1.08) saturate(1.1);
-      transform: scale(1.12) translateX(40px);
-      opacity: 0;
-      transition: opacity 0.9s 0.2s ease;
-      -webkit-mask-image:
-        linear-gradient(to right,  transparent 0%, black 35%),
-        linear-gradient(to bottom, transparent 0%, black 12%),
-        linear-gradient(to top,    transparent 0%, black 8%);
-      -webkit-mask-composite: destination-in, destination-in;
-      mask-image:
-        linear-gradient(to right,  transparent 0%, black 35%),
-        linear-gradient(to bottom, transparent 0%, black 12%),
-        linear-gradient(to top,    transparent 0%, black 8%);
-      mask-composite: intersect;
-    }
-    .hero-swiper .swiper-slide-active .slide-person {
-      opacity: 1;
-      animation: hPersonKenburns 10s ease-out forwards;
-    }
-    @keyframes hPersonKenburns {
-      0%   { transform: scale(1.12) translateX(0px); }
-      100% { transform: scale(1.0)  translateX(0px); }
-    }
+  /* ─── HERO ─── */
+  #hero { background: transparent; padding: 0; margin: 0; }
+  .hero-wrapper {
+    position:relative; width:100%; height:calc(100vh - 120px); min-height:560px; overflow:hidden;
+  }
+  .hero-swiper { width:100%; height:100%; }
+  .hero-swiper .swiper-slide { width:100%; height:100%; }
+  .hero-slide { position:relative; width:100%; height:100%; overflow:hidden; }
+  .slide-bg {
+    position:absolute; top:-10%; left:-10%; right:-10%; bottom:-10%;
+    background-size:cover; background-position:center; transform:scale(1.12);
+  }
+  .hero-swiper .swiper-slide-active .slide-bg { animation: hKB 10s ease-out forwards; }
+  @keyframes hKB { from{transform:scale(1.12)} to{transform:scale(1.0)} }
+  .slide-bg::after {
+    content:""; position:absolute; inset:0;
+    background: linear-gradient(to right, rgba(14,20,34,.88) 0%, rgba(14,20,34,.6) 45%, rgba(14,20,34,.1) 100%);
+  }
+  .slide-person {
+    position:absolute; right:0; bottom:0; height:100%; width:70%;
+    background-image:var(--person-img); background-size:contain; background-repeat:no-repeat; background-position:right bottom;
+    z-index:1; filter:brightness(1.02) contrast(1.08) saturate(1.1);
+    transform:scale(1.12); opacity:0; transition:opacity .9s .2s ease;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 35%), linear-gradient(to bottom, transparent 0%, black 12%), linear-gradient(to top, transparent 0%, black 8%);
+    -webkit-mask-composite: destination-in, destination-in;
+    mask-image: linear-gradient(to right, transparent 0%, black 35%), linear-gradient(to bottom, transparent 0%, black 12%), linear-gradient(to top, transparent 0%, black 8%);
+    mask-composite: intersect;
+  }
+  .hero-swiper .swiper-slide-active .slide-person { opacity:1; animation: hPKB 10s ease-out forwards; }
+  @keyframes hPKB { from{transform:scale(1.12)} to{transform:scale(1.0)} }
+  .slide-content { position:absolute; inset:0; z-index:2; display:flex; align-items:center; padding:0 70px; }
+  .slide-inner { max-width:560px; color:#fff; }
+  .slide-sub { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,.7); margin-bottom:18px; display:flex; align-items:center; gap:8px; }
+  .slide-sub::before { content:""; width:28px; height:2px; background:var(--red); display:inline-block; }
+  .slide-inner h1 {
+    font-family:"Red Hat Display",sans-serif; font-size:54px; font-weight:900; line-height:1.1;
+    color:#fff; margin-bottom:20px; opacity:0; transform:translateY(30px);
+    transition:opacity .7s .3s ease, transform .7s .3s ease;
+  }
+  .slide-inner p {
+    font-size:16px; line-height:1.8; color:rgba(255,255,255,.85); max-width:440px; margin-bottom:36px;
+    opacity:0; transform:translateY(20px); transition:opacity .7s .5s ease, transform .7s .5s ease;
+  }
+  .slide-btns { display:flex; gap:14px; flex-wrap:wrap; opacity:0; transform:translateY(20px); transition:opacity .7s .7s ease, transform .7s .7s ease; }
+  .hero-swiper .swiper-slide-active .slide-inner h1,
+  .hero-swiper .swiper-slide-active .slide-inner p,
+  .hero-swiper .swiper-slide-active .slide-btns { opacity:1; transform:translateY(0); }
+  .slide-inner h1 em { color:var(--red); font-style:normal; }
+  .btn-red { background:var(--red); color:#fff; padding:13px 32px; border-radius:4px; font-weight:700; font-size:14px; transition:background .2s; display:inline-block; }
+  .btn-red:hover { background:#b00f0f; color:#fff; }
+  .btn-white-out { background:transparent; color:#fff; border:2px solid #fff; padding:11px 30px; border-radius:4px; font-weight:700; font-size:14px; transition:all .2s; display:inline-block; }
+  .btn-white-out:hover { background:#fff; color:var(--dark); }
+  .hero-wrapper .swiper-pagination { bottom:24px!important; z-index:10; }
+  .hero-wrapper .swiper-pagination-bullet { background:rgba(255,255,255,.4); opacity:1; width:10px; height:10px; }
+  .hero-wrapper .swiper-pagination-bullet-active { background:var(--red); }
+  .hero-progress { position:absolute; top:0; left:0; height:4px; background:var(--red); width:0; z-index:20; }
+  .hero-progress.run { animation:hProg 10s linear forwards; }
+  @keyframes hProg { from{width:0} to{width:100%} }
 
-    .slide-content {
-      position: absolute; inset: 0; z-index: 2;
-      display: flex; align-items: center; padding: 0 70px;
-    }
-    .slide-inner { max-width: 560px; color: #fff; }
-    .slide-subtitle {
-      font-size: 12px; font-weight: 700; letter-spacing: 3px;
-      text-transform: uppercase; color: rgba(255,255,255,0.75); margin-bottom: 18px;
-    }
-    .slide-inner h1 {
-      font-family: 'Red Hat Display', sans-serif;
-      font-size: 54px; font-weight: 900; line-height: 1.1;
-      color: #fff; margin-bottom: 20px;
-      opacity: 0; transform: translateY(30px);
-      transition: opacity 0.7s 0.3s ease, transform 0.7s 0.3s ease;
-    }
-    .slide-inner p {
-      font-size: 16px; line-height: 1.75;
-      color: rgba(255,255,255,0.85); max-width: 440px; margin-bottom: 36px;
-      opacity: 0; transform: translateY(20px);
-      transition: opacity 0.7s 0.5s ease, transform 0.7s 0.5s ease;
-    }
-    .slide-buttons {
-      display: flex; gap: 16px; flex-wrap: wrap;
-      opacity: 0; transform: translateY(20px);
-      transition: opacity 0.7s 0.7s ease, transform 0.7s 0.7s ease;
-    }
-    .hero-swiper .swiper-slide-active .slide-inner h1,
-    .hero-swiper .swiper-slide-active .slide-inner p,
-    .hero-swiper .swiper-slide-active .slide-buttons { opacity: 1; transform: translateY(0); }
-    .slide-inner h1 span { color: #ed1c24; }
+  /* ─── STATS BAR ─── */
+  .stats-bar {
+    background:var(--dark); padding:28px 60px;
+    display:grid; grid-template-columns:repeat(4,1fr); gap:20px;
+  }
+  .stat-item { text-align:center; color:#fff; border-right:1px solid rgba(255,255,255,.12); }
+  .stat-item:last-child { border-right:none; }
+  .stat-num { font-family:"Red Hat Display",sans-serif; font-size:42px; font-weight:900; color:var(--red); line-height:1; }
+  .stat-label { font-size:13px; color:rgba(255,255,255,.65); margin-top:6px; letter-spacing:.5px; }
 
-    .hero-btn-primary {
-      background: #ed1c24; color: #fff; padding: 14px 36px; border: none;
-      font-size: 15px; font-weight: 700; border-radius: 4px;
-      text-decoration: none; cursor: pointer; transition: background 0.2s;
-    }
-    .hero-btn-primary:hover { background: #b00f0f; }
-    .hero-btn-outline {
-      background: transparent; color: #fff; padding: 13px 34px; border: 2px solid #fff;
-      font-size: 15px; font-weight: 700; border-radius: 4px;
-      text-decoration: none; cursor: pointer; transition: all 0.2s;
-    }
-    .hero-btn-outline:hover { background: #fff; color: #0e1422; }
+  /* ─── SECTION COMMON ─── */
+  .section-wrap { padding:90px 60px; }
+  .section-wrap.gray { background:#f7f7f7; }
+  .section-wrap.dark { background:var(--dark); }
+  .s-label {
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+    color:var(--red); margin-bottom:16px;
+  }
+  .s-label::before { content:""; width:24px; height:2px; background:var(--red); }
+  .s-title { font-family:"Red Hat Display",sans-serif; font-size:42px; font-weight:900; line-height:1.15; color:var(--dark); margin-bottom:16px; }
+  .s-title .hl { color:var(--red); }
+  .s-sub { font-size:16px; line-height:1.75; color:#666; max-width:600px; }
 
-    .hero-wrapper .swiper-pagination { bottom: 24px !important; z-index: 10; }
-    .hero-wrapper .swiper-pagination-bullet { background: rgba(255,255,255,0.45); opacity: 1; width: 10px; height: 10px; }
-    .hero-wrapper .swiper-pagination-bullet-active { background: #ed1c24; }
+  /* ─── ABOUT ─── */
+  .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center; }
+  .pillars { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:36px; }
+  .pillar {
+    background:#fff; border-radius:10px; padding:24px 22px;
+    border-left:4px solid var(--red); box-shadow:0 2px 16px rgba(0,0,0,.06);
+    transition:transform .25s, box-shadow .25s;
+  }
+  .pillar:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,.1); }
+  .pillar h4 { font-size:15px; font-weight:800; margin-bottom:8px; color:var(--dark); }
+  .pillar p { font-size:13px; color:#666; line-height:1.65; }
+  .about-right { position:relative; }
+  .about-img-main { width:100%; border-radius:12px; object-fit:cover; height:460px; box-shadow:0 12px 40px rgba(0,0,0,.15); }
+  .about-badge {
+    position:absolute; bottom:32px; left:-32px;
+    background:var(--red); color:#fff; padding:24px 28px; border-radius:12px;
+    box-shadow:0 8px 30px rgba(237,28,36,.35); max-width:200px;
+  }
+  .about-badge .ab-num { font-family:"Red Hat Display",sans-serif; font-size:36px; font-weight:900; line-height:1; }
+  .about-badge .ab-txt { font-size:12px; opacity:.9; margin-top:4px; line-height:1.4; }
 
-    .slider-progress { position: absolute; top: 0; left: 0; height: 4px; background: #ed1c24; width: 0%; z-index: 20; }
-    .slider-progress.animate { animation: hSlideProgress 10s linear forwards; }
-    @keyframes hSlideProgress { from { width: 0%; } to { width: 100%; } }
+  /* ─── PROGRAMS ─── */
+  .programs-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-top:48px; }
+  .prog-card {
+    background:#fff; border-radius:12px; overflow:hidden;
+    box-shadow:0 2px 16px rgba(0,0,0,.06); transition:transform .3s, box-shadow .3s;
+  }
+  .prog-card:hover { transform:translateY(-6px); box-shadow:0 12px 32px rgba(0,0,0,.12); }
+  .prog-card-top {
+    height:180px; background:var(--dark);
+    display:flex; align-items:center; justify-content:center;
+    font-size:48px; position:relative; overflow:hidden;
+  }
+  .prog-card-top::after {
+    content:""; position:absolute; bottom:0; left:0; right:0; height:4px; background:var(--red);
+  }
+  .prog-card-body { padding:24px; }
+  .prog-card-body h3 { font-size:18px; font-weight:800; margin-bottom:10px; color:var(--dark); }
+  .prog-card-body p { font-size:14px; color:#666; line-height:1.7; }
+  .prog-read { display:inline-flex; align-items:center; gap:6px; margin-top:16px; font-size:13px; font-weight:700; color:var(--red); }
+  .prog-read:hover { gap:10px; }
 
-    @media (max-width: 1024px) { .slide-person { width: 65%; } .slide-inner h1 { font-size: 42px; } }
-    @media (max-width: 768px) {
-      .hero-wrapper { height: calc(100svh - 80px); }
-      .slide-content { padding: 0 24px; }
-      .slide-inner h1 { font-size: 32px; }
-      .slide-person { width: 100%; opacity: 0.2 !important; }
-    }
+  /* ─── PRINCIPLES ─── */
+  .principles-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; margin-top:48px; }
+  .principle-card {
+    text-align:center; padding:32px 20px; border-radius:12px;
+    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+    transition:background .3s, border-color .3s;
+  }
+  .principle-card:hover { background:rgba(237,28,36,.15); border-color:var(--red); }
+  .principle-icon { font-size:32px; margin-bottom:14px; }
+  .principle-card h4 { color:#fff; font-size:15px; font-weight:800; margin-bottom:8px; }
+  .principle-card p { color:rgba(255,255,255,.6); font-size:13px; line-height:1.6; }
+
+  /* ─── CTA BAND ─── */
+  .cta-band {
+    background: linear-gradient(135deg, var(--red) 0%, #9e0008 100%);
+    padding:70px 60px; display:grid; grid-template-columns:1fr auto; gap:40px; align-items:center;
+  }
+  .cta-band h2 { font-family:"Red Hat Display",sans-serif; font-size:38px; font-weight:900; color:#fff; line-height:1.2; }
+  .cta-band p { color:rgba(255,255,255,.85); font-size:16px; margin-top:10px; }
+  .cta-btns { display:flex; flex-direction:column; gap:12px; min-width:200px; }
+  .btn-white { background:#fff; color:var(--red); padding:13px 32px; border-radius:4px; font-weight:800; font-size:14px; text-align:center; transition:all .2s; display:block; }
+  .btn-white:hover { background:var(--dark); color:#fff; }
+  .btn-red-out { background:transparent; color:#fff; border:2px solid rgba(255,255,255,.6); padding:11px 30px; border-radius:4px; font-weight:700; font-size:14px; text-align:center; transition:all .2s; display:block; }
+  .btn-red-out:hover { background:rgba(255,255,255,.15); border-color:#fff; }
+
+  /* ─── EVENTS ─── */
+  .events-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-top:48px; }
+  .event-card {
+    background:#fff; border-radius:12px; overflow:hidden;
+    box-shadow:0 2px 16px rgba(0,0,0,.06); transition:transform .3s, box-shadow .3s;
+  }
+  .event-card:hover { transform:translateY(-5px); box-shadow:0 10px 30px rgba(0,0,0,.1); }
+  .event-head {
+    background:var(--dark); padding:22px 24px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .event-date-box .day { font-family:"Red Hat Display",sans-serif; font-size:38px; font-weight:900; color:#fff; line-height:1; }
+  .event-date-box .month { font-size:12px; color:rgba(255,255,255,.6); letter-spacing:1px; text-transform:uppercase; }
+  .event-tag { background:var(--red); color:#fff; font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; }
+  .event-body { padding:24px; }
+  .event-body h3 { font-size:17px; font-weight:800; margin-bottom:10px; line-height:1.35; }
+  .event-body p { font-size:14px; color:#666; line-height:1.7; margin-bottom:16px; }
+  .event-meta { display:flex; gap:16px; font-size:13px; color:#999; flex-wrap:wrap; }
+  .event-meta span { display:flex; align-items:center; gap:5px; }
+
+  /* ─── TEAM ─── */
+  .team-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-top:48px; }
+  .member-card {
+    background:#fff; border-radius:12px; overflow:hidden;
+    box-shadow:0 2px 16px rgba(0,0,0,.06); transition:transform .3s, box-shadow .3s; text-align:center;
+  }
+  .member-card:hover { transform:translateY(-5px); box-shadow:0 10px 28px rgba(0,0,0,.1); }
+  .member-img-wrap { position:relative; height:260px; overflow:hidden; background:var(--gray); }
+  .member-img-wrap img { width:100%; height:100%; object-fit:cover; object-position:top; transition:transform .5s; }
+  .member-card:hover .member-img-wrap img { transform:scale(1.05); }
+  .member-img-wrap::after {
+    content:""; position:absolute; bottom:0; left:0; right:0; height:60px;
+    background:linear-gradient(to top, rgba(14,20,34,.5), transparent);
+  }
+  .member-info { padding:20px; border-top:3px solid var(--red); }
+  .member-info h3 { font-size:13px; font-weight:700; text-transform:uppercase; color:var(--red); letter-spacing:1px; margin-bottom:4px; }
+  .member-info .name { font-family:"Red Hat Display",sans-serif; font-size:18px; font-weight:800; color:var(--dark); }
+
+  /* ─── GALLERY ─── */
+  .gallery-filters { display:flex; gap:10px; flex-wrap:wrap; margin:28px 0 36px; }
+  .gf-btn { padding:9px 22px; border:2px solid #ddd; background:#fff; border-radius:30px; font-weight:700; font-size:13px; cursor:pointer; color:#666; transition:all .25s; }
+  .gf-btn:hover, .gf-btn.active { background:var(--red); border-color:var(--red); color:#fff; }
+  .masonry-grid { columns:3; column-gap:16px; }
+  .masonry-item { break-inside:avoid; margin-bottom:16px; position:relative; overflow:hidden; border-radius:10px; cursor:pointer; }
+  .masonry-item img { width:100%; display:block; object-fit:cover; aspect-ratio:4/3; border-radius:10px; transition:transform .5s; }
+  .masonry-item.tall img { aspect-ratio:3/4; }
+  .masonry-item:hover img { transform:scale(1.06); }
+  .masonry-overlay {
+    position:absolute; inset:0;
+    background:linear-gradient(to top, rgba(14,20,34,.85) 0%, rgba(14,20,34,0) 55%);
+    border-radius:10px; display:flex; flex-direction:column; justify-content:space-between; align-items:center;
+    padding:20px; opacity:0; transition:opacity .35s;
+  }
+  .masonry-item:hover .masonry-overlay { opacity:1; }
+  .masonry-icon { font-size:22px; color:#fff; width:44px; height:44px; background:rgba(237,28,36,.85); border-radius:50%; display:flex; align-items:center; justify-content:center; }
+  .masonry-info { width:100%; }
+  .masonry-tag { display:inline-block; background:var(--red); color:#fff; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:3px 10px; border-radius:20px; margin-bottom:6px; }
+  .masonry-info h4 { color:#fff; font-size:15px; font-weight:700; margin:0; }
+  .masonry-item.hidden { display:none; }
+
+  /* ─── LIGHTBOX ─── */
+  .lightbox { display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.93); align-items:center; justify-content:center; }
+  .lightbox.open { display:flex; }
+  .lb-img-wrap { position:relative; max-width:85vw; max-height:85vh; text-align:center; }
+  .lb-img-wrap img { max-width:100%; max-height:80vh; border-radius:8px; display:block; margin:0 auto; }
+  .lb-caption { color:rgba(255,255,255,.8); font-size:14px; margin-top:12px; }
+  .lb-close { position:absolute; top:20px; right:24px; background:none; border:none; color:#fff; font-size:28px; cursor:pointer; z-index:2; }
+  .lb-arrow { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.1); border:none; color:#fff; font-size:22px; padding:12px 16px; cursor:pointer; border-radius:4px; transition:background .2s; }
+  .lb-arrow:hover { background:var(--red); }
+  .lb-prev { left:16px; }
+  .lb-next { right:16px; }
+
+  /* ─── CONTACT ─── */
+  .contact-grid { display:grid; grid-template-columns:1fr 1.2fr; gap:70px; align-items:start; }
+  .contact-items { margin-top:32px; display:flex; flex-direction:column; gap:24px; }
+  .contact-item { display:flex; gap:16px; align-items:flex-start; }
+  .contact-item .ci-icon { width:46px; height:46px; background:rgba(237,28,36,.1); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; color:var(--red); flex-shrink:0; }
+  .contact-item h4 { font-size:14px; font-weight:800; margin-bottom:4px; }
+  .contact-item p, .contact-item a { font-size:14px; color:#666; }
+  .contact-item a:hover { color:var(--red); }
+  .cf-box { background:#fff; border-radius:14px; padding:36px; box-shadow:0 4px 30px rgba(0,0,0,.08); }
+  .cf-box h3 { font-family:"Red Hat Display",sans-serif; font-size:24px; font-weight:800; margin-bottom:24px; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .form-group { margin-bottom:18px; }
+  .form-group label { display:block; font-size:13px; font-weight:700; margin-bottom:6px; color:var(--dark); }
+  .form-group input, .form-group select, .form-group textarea {
+    width:100%; padding:11px 14px; border:1.5px solid #e0e0e0; border-radius:6px;
+    font-family:inherit; font-size:14px; color:var(--dark); outline:none; transition:border-color .2s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--red); }
+  .form-group textarea { height:110px; resize:vertical; }
+  .btn-submit { background:var(--red); color:#fff; border:none; padding:13px 36px; border-radius:6px; font-size:15px; font-weight:700; cursor:pointer; width:100%; transition:background .2s; }
+  .btn-submit:hover { background:#b00f0f; }
+
+  /* ─── FOOTER ─── */
+  footer { background:var(--dark); color:rgba(255,255,255,.75); }
+  .footer-top { display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:48px; padding:64px 60px 40px; }
+  .footer-brand img { height:52px; margin-bottom:16px; }
+  .footer-brand h3 { font-family:"Red Hat Display",sans-serif; font-size:18px; font-weight:800; color:#fff; margin-bottom:10px; line-height:1.3; }
+  .footer-brand p { font-size:13px; line-height:1.75; }
+  .footer-brand .socials { display:flex; gap:10px; margin-top:20px; }
+  .footer-brand .socials a { width:36px; height:36px; background:rgba(255,255,255,.08); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; color:rgba(255,255,255,.7); transition:all .2s; }
+  .footer-brand .socials a:hover { background:var(--red); color:#fff; }
+  .footer-col h4 { color:#fff; font-size:15px; font-weight:800; margin-bottom:18px; padding-bottom:10px; border-bottom:2px solid var(--red); display:inline-block; }
+  .footer-col ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
+  .footer-col ul li a { font-size:13px; color:rgba(255,255,255,.65); transition:color .2s; display:flex; align-items:center; gap:7px; }
+  .footer-col ul li a::before { content:"›"; color:var(--red); font-size:16px; }
+  .footer-col ul li a:hover { color:#fff; }
+  .footer-bottom { border-top:1px solid rgba(255,255,255,.08); padding:20px 60px; display:flex; justify-content:space-between; align-items:center; font-size:13px; }
+  .footer-bottom span { color:var(--red); }
+
+  /* ─── REVEAL ─── */
+  .reveal { opacity:0; transform:translateY(30px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1100px) {
+    .programs-grid, .principles-grid { grid-template-columns:repeat(2,1fr); }
+    .footer-top { grid-template-columns:1fr 1fr; }
+  }
+  @media (max-width: 900px) {
+    .about-grid, .contact-grid { grid-template-columns:1fr; }
+    .about-right { display:none; }
+    .team-grid { grid-template-columns:repeat(2,1fr); }
+    .cta-band { grid-template-columns:1fr; }
+    .events-grid { grid-template-columns:1fr 1fr; }
+    .stats-bar { grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width: 768px) {
+    .top-bar { display:none; }
+    .navbar { padding:0 20px; }
+    .nav-links { display:none; }
+    .hamburger { display:block; }
+    .hero-wrapper { height:calc(100svh - 80px); }
+    .slide-content { padding:0 24px; }
+    .slide-inner h1 { font-size:32px; }
+    .slide-person { width:100%; opacity:.15!important; }
+    .section-wrap { padding:60px 20px; }
+    .s-title { font-size:30px; }
+    .stats-bar { padding:20px; }
+    .masonry-grid { columns:2; }
+    .events-grid { grid-template-columns:1fr; }
+    .team-grid { grid-template-columns:1fr 1fr; }
+    .footer-top { padding:40px 20px 24px; grid-template-columns:1fr; gap:28px; }
+    .footer-bottom { flex-direction:column; gap:8px; text-align:center; padding:20px; }
+    .cta-band { padding:48px 20px; }
+    .programs-grid { grid-template-columns:1fr; }
+  }
+  @media (max-width: 480px) {
+    .masonry-grid { columns:1; }
+    .team-grid { grid-template-columns:1fr; }
+    .principles-grid { grid-template-columns:1fr 1fr; }
+    .form-row { grid-template-columns:1fr; }
+  }
   </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="tb-left">
+    <span><i class="fas fa-envelope"></i> <a href="mailto:redcross@kyu.ac.ke">redcross@kyu.ac.ke</a></span>
+    <span><i class="fas fa-phone"></i> <a href="tel:+254700000000">+254 700 000 000</a></span>
+    <span><i class="fas fa-map-marker-alt"></i> Kirinyaga University, Kutus</span>
+  </div>
+  <div class="tb-right">
+    <a href="#"><i class="fab fa-facebook-f"></i></a>
+    <a href="#"><i class="fab fa-twitter"></i></a>
+    <a href="#"><i class="fab fa-instagram"></i></a>
+    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<header class="navbar" id="navbar">
   <a href="#hero" class="nav-logo">
-    <img src="images/at-60-logo-203x114-1 (1).png" alt="KU Red Cross Logo" width="100" height="50"/>
+    <img src="images/at-60-logo-203x114-1 (1).png" alt="KU Red Cross Logo"/>
   </a>
   <ul class="nav-links">
+    <li><a href="#hero" class="active">Home</a></li>
     <li><a href="#about">About</a></li>
+    <li><a href="#programs">What We Do</a></li>
     <li><a href="#events">Events</a></li>
     <li><a href="#team">Team</a></li>
     <li><a href="#gallery">Gallery</a></li>
-    <li><a href="#contact" class="nav-cta">Contact Us</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#contact" class="nav-donate">Join Us</a></li>
   </ul>
-  <button class="hamburger" onclick="document.querySelector('.mobile-nav').classList.add('open')" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
+  <button class="hamburger" onclick="document.querySelector('.mobile-nav').classList.add('open')">&#9776;</button>
+</header>
 
 <!-- MOBILE NAV -->
 <div class="mobile-nav">
   <button class="close-btn" onclick="document.querySelector('.mobile-nav').classList.remove('open')">&times;</button>
-  <a href="#about" onclick="document.querySelector('.mobile-nav').classList.remove('open')">About</a>
-  <a href="#events" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Events</a>
-  <a href="#team" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Team</a>
-  <a href="#gallery" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Gallery</a>
-  <a href="#contact" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Contact</a>
+  <a href="#hero"     onclick="document.querySelector('.mobile-nav').classList.remove('open')">Home</a>
+  <a href="#about"    onclick="document.querySelector('.mobile-nav').classList.remove('open')">About</a>
+  <a href="#programs" onclick="document.querySelector('.mobile-nav').classList.remove('open')">What We Do</a>
+  <a href="#events"   onclick="document.querySelector('.mobile-nav').classList.remove('open')">Events</a>
+  <a href="#team"     onclick="document.querySelector('.mobile-nav').classList.remove('open')">Team</a>
+  <a href="#gallery"  onclick="document.querySelector('.mobile-nav').classList.remove('open')">Gallery</a>
+  <a href="#contact"  onclick="document.querySelector('.mobile-nav').classList.remove('open')">Contact</a>
 </div>
 
-<!-- ── NEW SWIPER HERO ── -->
+<!-- HERO -->
 <section id="hero">
   <div class="hero-wrapper">
     <div class="swiper hero-swiper">
       <div class="swiper-wrapper">
 
-        <!-- SLIDE 1 -->
         <div class="swiper-slide hero-slide">
-          <div class="slide-bg" style="background-image: url('1.jpeg');"></div>
-          <div class="slide-person" style="--person-img: url('1p.png');"></div>
+          <div class="slide-bg" style="background-image:url('1.jpeg')"></div>
+          <div class="slide-person" style="--person-img:url('1p.png')"></div>
           <div class="slide-content">
             <div class="slide-inner">
-              <p class="slide-subtitle">Join Us Today</p>
-              <h1>Become a<br><span>Kirinyaga University Red Cross<br>Volunteer</span></h1>
+              <p class="slide-sub">Kirinyaga University · Red Cross Chapter</p>
+              <h1>Ready to Help.<br><em>Always.</em></h1>
               <p>Serving humanity through compassion, courage, and community care — right here on campus.</p>
-              <div class="slide-buttons">
-                <a href="#about" class="hero-btn-primary">Learn About Us</a>
-                <a href="#contact" class="hero-btn-outline">Join the Chapter</a>
+              <div class="slide-btns">
+                <a href="#about" class="btn-red">Learn About Us</a>
+                <a href="#contact" class="btn-white-out">Join the Chapter</a>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- SLIDE 2 -->
         <div class="swiper-slide hero-slide">
-          <div class="slide-bg" style="background-image: url('2.jpeg');"></div>
+          <div class="slide-bg" style="background-image:url('2.jpeg')"></div>
           <div class="slide-content">
             <div class="slide-inner">
-              <p class="slide-subtitle">First Aid · Blood Drives · Outreach</p>
-              <h1><span>Compassion in</span><br>Every Action</h1>
+              <p class="slide-sub">First Aid · Blood Drives · Outreach</p>
+              <h1><em>Compassion in</em><br>Every Action.</h1>
               <p>From first aid training to community outreach — we show up when it matters most.</p>
-              <div class="slide-buttons">
-                <a href="#events" class="hero-btn-primary">See Our Events</a>
-                <a href="#contact" class="hero-btn-outline">Volunteer With Us</a>
+              <div class="slide-btns">
+                <a href="#events" class="btn-red">See Our Events</a>
+                <a href="#contact" class="btn-white-out">Volunteer With Us</a>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- SLIDE 3 -->
         <div class="swiper-slide hero-slide">
-          <div class="slide-bg" style="background-image: url('3.jpeg');"></div>
+          <div class="slide-bg" style="background-image:url('3.jpeg')"></div>
           <div class="slide-content">
             <div class="slide-inner">
-              <p class="slide-subtitle">Humanity · Impartiality · Neutrality</p>
-              <h1>One Chapter.<br><span>Countless Lives.</span></h1>
+              <p class="slide-sub">Humanity · Impartiality · Neutrality</p>
+              <h1>One Chapter.<br><em>Countless Lives.</em></h1>
               <p>United by the seven fundamental principles of the Red Cross Movement, we serve without boundaries.</p>
-              <div class="slide-buttons">
-                <a href="#about" class="hero-btn-primary">Our Mission</a>
-                <a href="#team" class="hero-btn-outline">Meet the Team</a>
+              <div class="slide-btns">
+                <a href="#about" class="btn-red">Our Mission</a>
+                <a href="#team" class="btn-white-out">Meet the Team</a>
               </div>
             </div>
           </div>
@@ -223,91 +488,189 @@
       </div>
       <div class="swiper-pagination"></div>
     </div>
-    <div class="slider-progress" id="sliderProgress"></div>
+    <div class="hero-progress" id="heroProgress"></div>
   </div>
 </section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-item reveal">
+    <div class="stat-num" data-target="200">0</div>
+    <div class="stat-label">Active Members</div>
+  </div>
+  <div class="stat-item reveal">
+    <div class="stat-num" data-target="50">0</div>
+    <div class="stat-label">Events Held</div>
+  </div>
+  <div class="stat-item reveal">
+    <div class="stat-num" data-target="5">0</div>
+    <div class="stat-label">Years of Service</div>
+  </div>
+  <div class="stat-item reveal">
+    <div class="stat-num" data-target="7">0</div>
+    <div class="stat-label">Fundamental Principles</div>
+  </div>
+</div>
 
 <!-- ABOUT -->
-<section id="about">
+<section id="about" class="section-wrap">
   <div class="about-grid">
     <div>
-      <div class="section-label">Who We Are</div>
-      <h2 class="section-title">A Community Built on Humanity &amp; Service</h2>
-      <p class="section-sub">The Kirinyaga University Red Cross Chapter is a student-led humanitarian organization committed to promoting the seven fundamental principles of the Red Cross Movement.</p>
-      <div class="about-pillars">
-        <div class="pillar">
-          <h4>🩸 First Aid</h4>
-          <p>Training and responding to medical emergencies on and off campus.</p>
-        </div>
-        <div class="pillar">
-          <h4>💧 Blood Drives</h4>
-          <p>Organizing donation campaigns to support national blood banks.</p>
-        </div>
-        <div class="pillar">
-          <h4>🤝 Community Service</h4>
-          <p>Reaching out to vulnerable groups in the surrounding community.</p>
-        </div>
-        <div class="pillar">
-          <h4>🎓 Capacity Building</h4>
-          <p>Empowering students through workshops, drills, and leadership programs.</p>
-        </div>
+      <p class="s-label">Who We Are</p>
+      <h2 class="s-title">A Community Built on<br><span class="hl">Humanity & Service</span></h2>
+      <p class="s-sub">The Kirinyaga University Red Cross Chapter is a student-led humanitarian organization committed to promoting the seven fundamental principles of the Red Cross Movement on campus and beyond.</p>
+      <div class="pillars">
+        <div class="pillar reveal"><h4>🩸 First Aid</h4><p>Training and responding to medical emergencies on and off campus.</p></div>
+        <div class="pillar reveal"><h4>💧 Blood Drives</h4><p>Organizing donation campaigns to support national blood banks.</p></div>
+        <div class="pillar reveal"><h4>🤝 Community Service</h4><p>Reaching out to vulnerable groups in the surrounding community.</p></div>
+        <div class="pillar reveal"><h4>🎓 Capacity Building</h4><p>Empowering students through workshops, drills, and leadership programs.</p></div>
       </div>
     </div>
-    <div class="about-visual">
-      <div class="about-card">
-        <div class="about-card-icon">🌍</div>
-        <h3>Our Mission</h3>
-        <p>To inspire, encourage, and initiate at all times all forms of humanitarian activities by the Kirinyaga University community so as to prevent and alleviate human suffering.</p>
+    <div class="about-right">
+      <img class="about-img-main" src="images/Executive.png" alt="KYU Red Cross Executive Team"/>
+      <div class="about-badge">
+        <div class="ab-num">200+</div>
+        <div class="ab-txt">Active Members Serving</div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- PROGRAMS -->
+<section id="programs" class="section-wrap gray">
+  <div style="text-align:center">
+    <p class="s-label" style="justify-content:center">What We Do</p>
+    <h2 class="s-title" style="text-align:center">Our <span class="hl">Programs</span></h2>
+    <p class="s-sub" style="margin:0 auto;text-align:center">Guided by humanitarian principles, we run impactful programs that serve our campus and surrounding communities.</p>
+  </div>
+  <div class="programs-grid">
+    <div class="prog-card reveal">
+      <div class="prog-card-top" style="background:linear-gradient(135deg,#0e1422,#1d2a4a)">🏥</div>
+      <div class="prog-card-body">
+        <h3>First Aid & Emergency Response</h3>
+        <p>We train students and community members in basic first aid, CPR, and emergency response protocols to save lives on campus and beyond.</p>
+        <a href="#contact" class="prog-read">Learn More <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+    <div class="prog-card reveal">
+      <div class="prog-card-top" style="background:linear-gradient(135deg,#7b0000,#ed1c24)">🩸</div>
+      <div class="prog-card-body">
+        <h3>Blood Donation Drives</h3>
+        <p>Organizing regular blood donation campaigns in partnership with Kenya National Blood Transfusion Service to support critical medical needs.</p>
+        <a href="#contact" class="prog-read">Learn More <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+    <div class="prog-card reveal">
+      <div class="prog-card-top" style="background:linear-gradient(135deg,#004d2e,#00843d)">🤝</div>
+      <div class="prog-card-body">
+        <h3>Community Outreach</h3>
+        <p>Visiting local schools, health centres and vulnerable communities to provide medical support, hygiene education, and relief supplies.</p>
+        <a href="#contact" class="prog-read">Learn More <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+    <div class="prog-card reveal">
+      <div class="prog-card-top" style="background:linear-gradient(135deg,#1a1a2e,#4a3f70)">🎓</div>
+      <div class="prog-card-body">
+        <h3>Capacity Building</h3>
+        <p>Workshops, leadership seminars, and drill exercises that empower students to become effective humanitarian volunteers.</p>
+        <a href="#contact" class="prog-read">Learn More <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+    <div class="prog-card reveal">
+      <div class="prog-card-top" style="background:linear-gradient(135deg,#0e3d4a,#0e7a8a)">🌍</div>
+      <div class="prog-card-body">
+        <h3>Disaster Preparedness</h3>
+        <p>Equipping students with knowledge and skills to respond effectively to natural disasters, accidents and mass casualty incidents.</p>
+        <a href="#contact" class="prog-read">Learn More <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+    <div class="prog-card reveal">
+      <div class="prog-card-top" style="background:linear-gradient(135deg,#3d2000,#b56000)">🌱</div>
+      <div class="prog-card-body">
+        <h3>Youth Development</h3>
+        <p>Promoting youth-led volunteerism, peer support programs, and sustainable humanitarian action among university students.</p>
+        <a href="#contact" class="prog-read">Learn More <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 FUNDAMENTAL PRINCIPLES -->
+<section class="section-wrap dark">
+  <div style="text-align:center">
+    <p class="s-label" style="justify-content:center;color:rgba(255,255,255,.5)">Our Foundation</p>
+    <h2 class="s-title" style="color:#fff;text-align:center">The 7 <span class="hl">Fundamental Principles</span></h2>
+    <p class="s-sub" style="color:rgba(255,255,255,.65);margin:0 auto;text-align:center">The Kenya Red Cross Society is guided by these seven principles of the Red Cross Red Crescent Movement.</p>
+  </div>
+  <div class="principles-grid">
+    <div class="principle-card reveal"><div class="principle-icon">❤️</div><h4>Humanity</h4><p>To prevent and alleviate human suffering wherever it may be found.</p></div>
+    <div class="principle-card reveal"><div class="principle-icon">⚖️</div><h4>Impartiality</h4><p>No discrimination based on nationality, race, religion, class or political opinions.</p></div>
+    <div class="principle-card reveal"><div class="principle-icon">🕊️</div><h4>Neutrality</h4><p>Refraining from taking sides in hostilities or engaging in controversies.</p></div>
+    <div class="principle-card reveal"><div class="principle-icon">🛡️</div><h4>Independence</h4><p>Autonomous and independent from governments and institutions.</p></div>
+    <div class="principle-card reveal"><div class="principle-icon">🙌</div><h4>Voluntary Service</h4><p>A voluntary relief movement not prompted by desire for gain.</p></div>
+    <div class="principle-card reveal"><div class="principle-icon">🌐</div><h4>Unity</h4><p>There can only be one Red Cross or Red Crescent Society in any one country.</p></div>
+    <div class="principle-card reveal"><div class="principle-icon">🌍</div><h4>Universality</h4><p>A worldwide institution where all Societies have equal status.</p></div>
+    <div class="principle-card reveal"><div class="principle-icon">✊</div><h4>Our Commitment</h4><p>At KYU Red Cross we uphold all seven principles in every action we take.</p></div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <div>
+    <h2>Become a Member<br>or Volunteer With Us</h2>
+    <p>Help us serve the Kirinyaga University community and beyond. Every hand counts — join the chapter today.</p>
+  </div>
+  <div class="cta-btns">
+    <a href="#contact" class="btn-white">Become a Member</a>
+    <a href="#contact" class="btn-red-out">Volunteer With Us</a>
+  </div>
+</div>
+
 <!-- EVENTS -->
-<section id="events">
-  <div class="section-label">What's Happening</div>
-  <h2 class="section-title">Upcoming Events &amp; Activities</h2>
-  <p class="section-sub">Stay up to date with our latest programs, training sessions, and community outreach initiatives.</p>
+<section id="events" class="section-wrap gray">
+  <p class="s-label">What's Happening</p>
+  <h2 class="s-title">Upcoming <span class="hl">Events</span></h2>
+  <p class="s-sub">Stay up to date with our latest programs, training sessions, and community outreach initiatives.</p>
   <div class="events-grid">
     <div class="event-card reveal">
-      <div class="event-header">
-        <div class="event-date"><div class="day">12</div><div class="month">Apr 2025</div></div>
+      <div class="event-head">
+        <div class="event-date-box"><div class="day">12</div><div class="month">Apr 2025</div></div>
         <span class="event-tag">First Aid</span>
       </div>
       <div class="event-body">
-        <h3>Basic First Aid &amp; CPR Training</h3>
+        <h3>Basic First Aid & CPR Training</h3>
         <p>Open to all university students. Learn life-saving skills including CPR, wound management, and emergency response protocols.</p>
         <div class="event-meta">
-          <span>Main Hall, KYU</span>
-          <span>🕘 9:00 AM</span>
+          <span><i class="fas fa-map-marker-alt"></i> Main Hall, KYU</span>
+          <span><i class="fas fa-clock"></i> 9:00 AM</span>
         </div>
       </div>
     </div>
     <div class="event-card reveal">
-      <div class="event-header">
-        <div class="event-date"><div class="day">31</div><div class="month">Mar 2026</div></div>
+      <div class="event-head">
+        <div class="event-date-box"><div class="day">31</div><div class="month">Mar 2026</div></div>
         <span class="event-tag">AGM</span>
       </div>
       <div class="event-body">
         <h3>Annual General Meeting</h3>
         <p>Join us for our annual general meeting to discuss the chapter's progress, upcoming initiatives, and community impact.</p>
         <div class="event-meta">
-          <span>Auditorium B</span>
-          <span>🕘 4:00 PM</span>
+          <span><i class="fas fa-map-marker-alt"></i> Auditorium B</span>
+          <span><i class="fas fa-clock"></i> 4:00 PM</span>
         </div>
       </div>
     </div>
     <div class="event-card reveal">
-      <div class="event-header">
-        <div class="event-date"><div class="day">05</div><div class="month">May 2026</div></div>
+      <div class="event-head">
+        <div class="event-date-box"><div class="day">05</div><div class="month">May 2026</div></div>
         <span class="event-tag">Outreach</span>
       </div>
       <div class="event-body">
         <h3>Community Health Outreach — Kirinyaga</h3>
         <p>Visiting local schools and health centres to provide basic medical support, health education, and distribute hygiene kits.</p>
         <div class="event-meta">
-          <span>Kirinyaga County</span>
-          <span>🕘 7:30 AM</span>
+          <span><i class="fas fa-map-marker-alt"></i> Kirinyaga County</span>
+          <span><i class="fas fa-clock"></i> 7:30 AM</span>
         </div>
       </div>
     </div>
@@ -315,123 +678,102 @@
 </section>
 
 <!-- TEAM -->
-<section id="team">
-  <div class="section-label">The People</div>
-  <h2 class="section-title">Meet Our Leadership Team</h2>
-  <p class="section-sub">Dedicated student leaders committed to humanitarian service and the growth of the chapter.</p>
+<section id="team" class="section-wrap">
+  <div style="text-align:center">
+    <p class="s-label" style="justify-content:center">The People</p>
+    <h2 class="s-title" style="text-align:center">Meet Our <span class="hl">Leadership Team</span></h2>
+    <p class="s-sub" style="margin:0 auto;text-align:center">Dedicated student leaders committed to humanitarian service and the growth of the chapter.</p>
+  </div>
   <div class="team-grid">
     <div class="member-card reveal">
-      <img class="member-avatar" src="images/Dennis.jpeg" alt="Chairperson - Dennis Kiptanui" />
-      <div class="member-info"><h3>Chairperson</h3><div class="role">DENNIS KIPTANUI</div></div>
+      <div class="member-img-wrap"><img src="images/Dennis.jpeg" alt="Dennis Kiptanui"/></div>
+      <div class="member-info"><h3>Chairperson</h3><div class="name">Dennis Kiptanui</div></div>
     </div>
     <div class="member-card reveal">
-      <img class="member-avatar" src="images/Ian.jpeg" alt="Vice Chairperson - Ian Kamau" />
-      <div class="member-info"><h3>Vice Chairperson</h3><div class="role">IAN KAMAU</div></div>
+      <div class="member-img-wrap"><img src="images/Ian.jpeg" alt="Ian Kamau"/></div>
+      <div class="member-info"><h3>Vice Chairperson</h3><div class="name">Ian Kamau</div></div>
     </div>
     <div class="member-card reveal">
-      <img class="member-avatar" src="images/Mary1.jpeg" alt="Secretary - Mary Kahora" />
-      <div class="member-info"><h3>Secretary</h3><div class="role">MARY KAHORA</div></div>
+      <div class="member-img-wrap"><img src="images/Mary1.jpeg" alt="Mary Kahora"/></div>
+      <div class="member-info"><h3>Secretary</h3><div class="name">Mary Kahora</div></div>
     </div>
     <div class="member-card reveal">
-      <img class="member-avatar" src="images/Tabitha.jpeg" alt="Treasurer - Tabitha Cherotich" />
-      <div class="member-info"><h3>Treasurer</h3><div class="role">TABITHA CHEROTICH</div></div>
+      <div class="member-img-wrap"><img src="images/Tabitha.jpeg" alt="Tabitha Cherotich"/></div>
+      <div class="member-info"><h3>Treasurer</h3><div class="name">Tabitha Cherotich</div></div>
     </div>
     <div class="member-card reveal">
-      <img class="member-avatar" src="images/ken2.jpeg" alt="First Aid Officer - Kennedy Macharia" />
-      <div class="member-info"><h3>First Aid Officer</h3><div class="role">KENNEDY MACHARIA</div></div>
+      <div class="member-img-wrap"><img src="images/ken2.jpeg" alt="Kennedy Macharia"/></div>
+      <div class="member-info"><h3>First Aid Officer</h3><div class="name">Kennedy Macharia</div></div>
     </div>
     <div class="member-card reveal">
-      <img class="member-avatar" src="images/Portfolio .jpg" alt="Asst. First Aid Officer - Francis Lobun" />
-      <div class="member-info"><h3>Asst. First Aid Officer</h3><div class="role">FRANCIS LOBUN</div></div>
+      <div class="member-img-wrap"><img src="images/Portfolio .jpg" alt="Francis Lobun"/></div>
+      <div class="member-info"><h3>Asst. First Aid Officer</h3><div class="name">Francis Lobun</div></div>
     </div>
     <div class="member-card reveal">
-      <img class="member-avatar" src="images/Amos.jpeg" alt="Organising Secretary - Amos Maliro" />
-      <div class="member-info"><h3>Organising Secretary</h3><div class="role">AMOS MALIRO</div></div>
+      <div class="member-img-wrap"><img src="images/Amos.jpeg" alt="Amos Maliro"/></div>
+      <div class="member-info"><h3>Organising Secretary</h3><div class="name">Amos Maliro</div></div>
     </div>
     <div class="member-card reveal">
-      <img class="member-avatar" src="images/Holinda.jpeg" alt="Dissemination Officer - Holinda Kiarie" />
-      <div class="member-info"><h3>DISEMINATION OFFICER</h3><div class="role">HOLINDA KIARIE</div></div>
+      <div class="member-img-wrap"><img src="images/Holinda.jpeg" alt="Holinda Kiarie"/></div>
+      <div class="member-info"><h3>Dissemination Officer</h3><div class="name">Holinda Kiarie</div></div>
     </div>
     <div class="member-card reveal">
-      <img class="member-avatar" src="images/Orange.jpeg" alt="IT Personnel - Orange" />
-      <div class="member-info"><h3>IT Personnel</h3><div class="role">ORANGE</div></div>
+      <div class="member-img-wrap"><img src="images/Orange.jpeg" alt="Orange"/></div>
+      <div class="member-info"><h3>IT Personnel</h3><div class="name">Orange</div></div>
     </div>
   </div>
 </section>
 
 <!-- GALLERY -->
-<section id="gallery" class="gallery-section">
-  <div class="gallery-header">
-    <div class="section-label">Our Moments</div>
-    <h2 class="section-title">Gallery</h2>
-    <p class="section-sub">A glimpse into our activities, events, and the lives we touch across the campus and community.</p>
-
-    <!-- Filter tabs -->
-    <div class="gallery-filters">
-      <button class="gf-btn active" data-filter="all">All</button>
-      <button class="gf-btn" data-filter="team">Team</button>
-      <button class="gf-btn" data-filter="outreach">Outreach</button>
-      <button class="gf-btn" data-filter="events">Events</button>
-    </div>
+<section id="gallery" class="section-wrap gray">
+  <p class="s-label">Our Moments</p>
+  <h2 class="s-title">Photo <span class="hl">Gallery</span></h2>
+  <p class="s-sub">A glimpse into our activities, events, and the lives we touch across the campus and community.</p>
+  <div class="gallery-filters">
+    <button class="gf-btn active" data-filter="all">All</button>
+    <button class="gf-btn" data-filter="team">Team</button>
+    <button class="gf-btn" data-filter="outreach">Outreach</button>
+    <button class="gf-btn" data-filter="events">Events</button>
   </div>
-
-  <!-- Masonry grid -->
-  <div class="masonry-grid" id="masonryGrid">
+  <div class="masonry-grid">
     <div class="masonry-item tall" data-cat="team">
       <img src="images/Executive.png" alt="Executive Team" loading="lazy"/>
       <div class="masonry-overlay">
-        <span class="masonry-icon">⊕</span>
-        <div class="masonry-info">
-          <span class="masonry-tag">Team</span>
-          <h4>The Executive Team</h4>
-        </div>
+        <span class="masonry-icon"><i class="fas fa-plus"></i></span>
+        <div class="masonry-info"><span class="masonry-tag">Team</span><h4>The Executive Team</h4></div>
       </div>
     </div>
     <div class="masonry-item" data-cat="outreach">
-      <img src="images/Red Cross Team.png" alt="Donation Drive" loading="lazy"/>
+      <img src="images/Red Cross Team.png" alt="Blood Donation Drive" loading="lazy"/>
       <div class="masonry-overlay">
-        <span class="masonry-icon">⊕</span>
-        <div class="masonry-info">
-          <span class="masonry-tag">Outreach</span>
-          <h4>Blood Donation Drive</h4>
-        </div>
+        <span class="masonry-icon"><i class="fas fa-plus"></i></span>
+        <div class="masonry-info"><span class="masonry-tag">Outreach</span><h4>Blood Donation Drive</h4></div>
       </div>
     </div>
-    <div class="masonry-item wide" data-cat="outreach">
+    <div class="masonry-item" data-cat="outreach">
       <img src="images/community.jpeg" alt="Community Outreach" loading="lazy"/>
       <div class="masonry-overlay">
-        <span class="masonry-icon">⊕</span>
-        <div class="masonry-info">
-          <span class="masonry-tag">Outreach</span>
-          <h4>Community Outreach</h4>
-        </div>
+        <span class="masonry-icon"><i class="fas fa-plus"></i></span>
+        <div class="masonry-info"><span class="masonry-tag">Outreach</span><h4>Community Outreach</h4></div>
       </div>
     </div>
     <div class="masonry-item" data-cat="events">
       <img src="images/Awareness.jpeg" alt="Campus Awareness Week" loading="lazy"/>
       <div class="masonry-overlay">
-        <span class="masonry-icon">⊕</span>
-        <div class="masonry-info">
-          <span class="masonry-tag">Events</span>
-          <h4>Campus Awareness Week</h4>
-        </div>
+        <span class="masonry-icon"><i class="fas fa-plus"></i></span>
+        <div class="masonry-info"><span class="masonry-tag">Events</span><h4>Campus Awareness Week</h4></div>
       </div>
     </div>
     <div class="masonry-item tall" data-cat="events">
       <img src="images/gallery-leadership-workshop.jpg" alt="Leadership Workshop" loading="lazy"/>
       <div class="masonry-overlay">
-        <span class="masonry-icon">⊕</span>
-        <div class="masonry-info">
-          <span class="masonry-tag">Events</span>
-          <h4>Leadership Workshop</h4>
-        </div>
+        <span class="masonry-icon"><i class="fas fa-plus"></i></span>
+        <div class="masonry-info"><span class="masonry-tag">Events</span><h4>Leadership Workshop</h4></div>
       </div>
     </div>
   </div>
-
-  <!-- Lightbox -->
   <div class="lightbox" id="lightbox">
-    <button class="lb-close" id="lbClose">✕</button>
+    <button class="lb-close" id="lbClose">&#10005;</button>
     <button class="lb-arrow lb-prev" id="lbPrev">&#8592;</button>
     <button class="lb-arrow lb-next" id="lbNext">&#8594;</button>
     <div class="lb-img-wrap">
@@ -441,132 +783,35 @@
   </div>
 </section>
 
-<style>
-  .gallery-section { padding: 80px 60px; background: #f8f8f8; }
-  .gallery-header { text-align: center; margin-bottom: 48px; }
-
-  .gallery-filters { display: flex; gap: 10px; justify-content: center; margin-top: 28px; flex-wrap: wrap; }
-  .gf-btn {
-    padding: 9px 24px; border: 2px solid #ddd; background: #fff;
-    border-radius: 30px; font-weight: 700; font-size: 13px; cursor: pointer;
-    color: #555; transition: all 0.25s;
-  }
-  .gf-btn:hover, .gf-btn.active { background: #ed1c24; border-color: #ed1c24; color: #fff; }
-
-  .masonry-grid { columns: 3; column-gap: 16px; }
-  .masonry-item {
-    break-inside: avoid; margin-bottom: 16px;
-    position: relative; overflow: hidden;
-    border-radius: 10px; cursor: pointer;
-  }
-  .masonry-item.tall img  { aspect-ratio: 3/4; }
-  .masonry-item img {
-    width: 100%; display: block;
-    object-fit: cover; aspect-ratio: 4/3;
-    border-radius: 10px; transition: transform 0.5s ease;
-  }
-  .masonry-item:hover img { transform: scale(1.06); }
-
-  .masonry-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(14,20,34,0.85) 0%, rgba(14,20,34,0.0) 55%);
-    border-radius: 10px;
-    display: flex; flex-direction: column;
-    justify-content: space-between; align-items: center;
-    padding: 20px; opacity: 0; transition: opacity 0.35s ease;
-  }
-  .masonry-item:hover .masonry-overlay { opacity: 1; }
-  .masonry-icon {
-    font-size: 28px; color: #fff;
-    width: 48px; height: 48px;
-    background: rgba(237,28,36,0.85); border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .masonry-info { width: 100%; }
-  .masonry-tag {
-    display: inline-block; background: #ed1c24; color: #fff;
-    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
-    text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 6px;
-  }
-  .masonry-info h4 { color: #fff; font-size: 15px; font-weight: 700; margin: 0; }
-  .masonry-item.hidden { display: none; }
-
-  .lightbox {
-    display: none; position: fixed; inset: 0; z-index: 9999;
-    background: rgba(0,0,0,0.93);
-    align-items: center; justify-content: center;
-  }
-  .lightbox.open { display: flex; }
-  .lb-img-wrap { position: relative; max-width: 85vw; max-height: 85vh; text-align: center; }
-  .lb-img-wrap img { max-width: 100%; max-height: 80vh; border-radius: 8px; display: block; margin: 0 auto; }
-  .lb-caption { color: rgba(255,255,255,0.8); font-size: 14px; margin-top: 12px; }
-  .lb-close {
-    position: absolute; top: 20px; right: 24px;
-    background: none; border: none; color: #fff; font-size: 28px; cursor: pointer; z-index: 2;
-  }
-  .lb-arrow {
-    position: absolute; top: 50%; transform: translateY(-50%);
-    background: rgba(255,255,255,0.1); border: none; color: #fff;
-    font-size: 22px; padding: 12px 16px; cursor: pointer; border-radius: 4px; transition: background 0.2s;
-  }
-  .lb-arrow:hover { background: #ed1c24; }
-  .lb-prev { left: 16px; }
-  .lb-next { right: 16px; }
-
-  @media (max-width: 768px) {
-    .gallery-section { padding: 60px 20px; }
-    .masonry-grid { columns: 2; }
-  }
-  @media (max-width: 480px) { .masonry-grid { columns: 1; } }
-</style>
-
 <!-- CONTACT -->
-<section id="contact">
+<section id="contact" class="section-wrap">
   <div class="contact-grid">
-    <div class="contact-info">
-      <div class="section-label">Get In Touch</div>
-      <h2 class="section-title">Contact Us or Join the Chapter</h2>
-      <p class="section-sub">Whether you want to volunteer, join our team, or partner with us — we'd love to hear from you.</p>
-      <div class="contact-details">
+    <div>
+      <p class="s-label">Get In Touch</p>
+      <h2 class="s-title">Contact Us or<br><span class="hl">Join the Chapter</span></h2>
+      <p class="s-sub">Whether you want to volunteer, join our team, or partner with us — we'd love to hear from you.</p>
+      <div class="contact-items">
         <div class="contact-item">
-          <div class="icon">📍</div>
-          <div class="text">
-            <h4>Location</h4>
-            <p>Kirinyaga University, Kutus<br>Kirinyaga County, Kenya</p>
-          </div>
+          <div class="ci-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <div><h4>Location</h4><p>Kirinyaga University, Kutus<br>Kirinyaga County, Kenya</p></div>
         </div>
         <div class="contact-item">
-          <div class="icon">📧</div>
-          <div class="text">
-            <h4>Email</h4>
-            <p>redcross@kyu.ac.ke</p>
-          </div>
+          <div class="ci-icon"><i class="fas fa-envelope"></i></div>
+          <div><h4>Email</h4><a href="mailto:redcross@kyu.ac.ke">redcross@kyu.ac.ke</a></div>
         </div>
         <div class="contact-item">
-          <div class="icon">📞</div>
-          <div class="text">
-            <h4>Phone</h4>
-            <p>+254 700 000 000</p>
-          </div>
+          <div class="ci-icon"><i class="fas fa-phone"></i></div>
+          <div><h4>Phone</h4><a href="tel:+254700000000">+254 700 000 000</a></div>
         </div>
       </div>
     </div>
-    <div class="contact-form">
+    <div class="cf-box">
       <h3>Send Us a Message</h3>
       <div class="form-row">
-        <div class="form-group">
-          <label>First Name</label>
-          <input type="text" placeholder="Jane"/>
-        </div>
-        <div class="form-group">
-          <label>Last Name</label>
-          <input type="text" placeholder="Doe"/>
-        </div>
+        <div class="form-group"><label>First Name</label><input type="text" placeholder="Jane"/></div>
+        <div class="form-group"><label>Last Name</label><input type="text" placeholder="Doe"/></div>
       </div>
-      <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" placeholder="jane@example.com"/>
-      </div>
+      <div class="form-group"><label>Email Address</label><input type="email" placeholder="jane@example.com"/></div>
       <div class="form-group">
         <label>Subject</label>
         <select>
@@ -576,11 +821,8 @@
           <option>General question</option>
         </select>
       </div>
-      <div class="form-group">
-        <label>Message</label>
-        <textarea placeholder="Tell us a bit about yourself or your inquiry…"></textarea>
-      </div>
-      <button class="btn-submit">Send Message →</button>
+      <div class="form-group"><label>Message</label><textarea placeholder="Tell us a bit about yourself or your inquiry…"></textarea></div>
+      <button class="btn-submit">Send Message &rarr;</button>
     </div>
   </div>
 </section>
@@ -589,21 +831,28 @@
 <footer>
   <div class="footer-top">
     <div class="footer-brand">
-      <img src="images/footer logo.jpeg" alt="Red Cross Logo" width="100" height="50"/>
+      <img src="images/footer logo.jpeg" alt="Red Cross Logo"/>
       <h3>Kirinyaga University<br>Red Cross Chapter</h3>
-      <p>Committed to the seven fundamental principles of the Red Cross Movement.</p>
+      <p>Committed to the seven fundamental principles of the Red Cross Movement. Serving humanity on campus and beyond.</p>
+      <div class="socials">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      </div>
     </div>
-    <div class="footer-links">
+    <div class="footer-col">
       <h4>Quick Links</h4>
       <ul>
         <li><a href="#about">About Us</a></li>
+        <li><a href="#programs">What We Do</a></li>
         <li><a href="#events">Events</a></li>
         <li><a href="#team">Our Team</a></li>
         <li><a href="#gallery">Gallery</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </div>
-    <div class="footer-links">
+    <div class="footer-col">
       <h4>Fundamentals</h4>
       <ul>
         <li><a href="#">Humanity</a></li>
@@ -611,103 +860,113 @@
         <li><a href="#">Neutrality</a></li>
         <li><a href="#">Independence</a></li>
         <li><a href="#">Voluntary Service</a></li>
+        <li><a href="#">Unity</a></li>
+        <li><a href="#">Universality</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Get Involved</h4>
+      <ul>
+        <li><a href="#contact">Become a Member</a></li>
+        <li><a href="#contact">Volunteer With Us</a></li>
+        <li><a href="#contact">Partner With Us</a></li>
+        <li><a href="#events">Upcoming Events</a></li>
+        <li><a href="#contact">Donate</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <p>© 2026 Kirinyaga University Red Cross Chapter. All rights reserved.</p>
-    <p>Made with <span>♥</span> by the KYU Red Cross Chapter</p>
+    <p>&copy; 2026 Kirinyaga University Red Cross Chapter. All rights reserved.</p>
+    <p>Made with <span>&#9829;</span> by the KYU Red Cross Chapter</p>
   </div>
 </footer>
 
+<!-- SCRIPTS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
-  const progressBar = document.getElementById('sliderProgress');
-  function resetProgress() {
-    progressBar.classList.remove('animate');
-    void progressBar.offsetWidth;
-    progressBar.classList.add('animate');
+  const heroProgress = document.getElementById('heroProgress');
+  function resetProg() {
+    heroProgress.classList.remove('run');
+    void heroProgress.offsetWidth;
+    heroProgress.classList.add('run');
   }
-  const heroSwiper = new Swiper('.hero-swiper', {
-    effect: 'fade',
-    fadeEffect: { crossFade: true },
-    loop: true,
-    autoplay: { delay: 10000, disableOnInteraction: false },
-    speed: 800,
-    pagination: { el: '.swiper-pagination', clickable: true },
-    on: {
-      init()                       { resetProgress(); },
-      slideChangeTransitionStart() { resetProgress(); },
-    }
+  new Swiper('.hero-swiper', {
+    effect:'fade', fadeEffect:{crossFade:true}, loop:true,
+    autoplay:{delay:10000, disableOnInteraction:false}, speed:800,
+    pagination:{el:'.swiper-pagination', clickable:true},
+    on:{ init(){ resetProg(); }, slideChangeTransitionStart(){ resetProg(); } }
   });
-</script>
 
-<script>
-  // Gallery Filter
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, {threshold:0.12});
+  revealEls.forEach(el => io.observe(el));
+
+  const counters = document.querySelectorAll('.stat-num[data-target]');
+  const cio = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(!e.isIntersecting) return;
+      const el = e.target, target = +el.dataset.target;
+      let cur = 0, step = Math.ceil(target / 60);
+      const t = setInterval(() => {
+        cur = Math.min(cur + step, target);
+        el.textContent = cur + '+';
+        if(cur >= target) clearInterval(t);
+      }, 30);
+      cio.unobserve(el);
+    });
+  }, {threshold:0.5});
+  counters.forEach(c => cio.observe(c));
+
   const gfBtns = document.querySelectorAll('.gf-btn');
   const mItems = document.querySelectorAll('.masonry-item');
   gfBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       gfBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      const filter = btn.dataset.filter;
-      mItems.forEach(item => {
-        if (filter === 'all' || item.dataset.cat === filter) {
-          item.classList.remove('hidden');
-        } else {
-          item.classList.add('hidden');
-        }
-      });
+      const f = btn.dataset.filter;
+      mItems.forEach(item => item.classList.toggle('hidden', f !== 'all' && item.dataset.cat !== f));
     });
   });
 
-  // Lightbox
-  const lightbox = document.getElementById('lightbox');
-  const lbImg    = document.getElementById('lbImg');
-  const lbCap    = document.getElementById('lbCaption');
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbCap = document.getElementById('lbCaption');
   let lbItems = [], lbIdx = 0;
-
-  function openLightbox(items, idx) {
-    lbItems = items; lbIdx = idx;
-    showLbItem(lbIdx);
-    lightbox.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-  function showLbItem(i) {
-    const item = lbItems[i];
-    lbImg.src = item.querySelector('img').src;
-    lbCap.textContent = item.querySelector('h4').textContent;
-  }
-  mItems.forEach((item, i) => {
+  function showLb(i) { lbImg.src = lbItems[i].querySelector('img').src; lbCap.textContent = lbItems[i].querySelector('h4').textContent; }
+  mItems.forEach(item => {
     item.addEventListener('click', () => {
-      const visible = Array.from(mItems).filter(m => !m.classList.contains('hidden'));
-      const vIdx = visible.indexOf(item);
-      openLightbox(visible, vIdx);
+      lbItems = [...mItems].filter(m => !m.classList.contains('hidden'));
+      lbIdx = lbItems.indexOf(item);
+      showLb(lbIdx); lb.classList.add('open'); document.body.style.overflow='hidden';
     });
   });
-  document.getElementById('lbClose').onclick = () => {
-    lightbox.classList.remove('open');
-    document.body.style.overflow = '';
-  };
-  document.getElementById('lbPrev').onclick = () => {
-    lbIdx = (lbIdx - 1 + lbItems.length) % lbItems.length;
-    showLbItem(lbIdx);
-  };
-  document.getElementById('lbNext').onclick = () => {
-    lbIdx = (lbIdx + 1) % lbItems.length;
-    showLbItem(lbIdx);
-  };
-  lightbox.addEventListener('click', e => {
-    if (e.target === lightbox) { lightbox.classList.remove('open'); document.body.style.overflow = ''; }
-  });
+  document.getElementById('lbClose').onclick = () => { lb.classList.remove('open'); document.body.style.overflow=''; };
+  document.getElementById('lbPrev').onclick  = () => { lbIdx=(lbIdx-1+lbItems.length)%lbItems.length; showLb(lbIdx); };
+  document.getElementById('lbNext').onclick  = () => { lbIdx=(lbIdx+1)%lbItems.length; showLb(lbIdx); };
+  lb.addEventListener('click', e => { if(e.target===lb){ lb.classList.remove('open'); document.body.style.overflow=''; } });
   document.addEventListener('keydown', e => {
-    if (!lightbox.classList.contains('open')) return;
-    if (e.key === 'ArrowLeft')  { lbIdx = (lbIdx - 1 + lbItems.length) % lbItems.length; showLbItem(lbIdx); }
-    if (e.key === 'ArrowRight') { lbIdx = (lbIdx + 1) % lbItems.length; showLbItem(lbIdx); }
-    if (e.key === 'Escape')     { lightbox.classList.remove('open'); document.body.style.overflow = ''; }
+    if(!lb.classList.contains('open')) return;
+    if(e.key==='ArrowLeft')  { lbIdx=(lbIdx-1+lbItems.length)%lbItems.length; showLb(lbIdx); }
+    if(e.key==='ArrowRight') { lbIdx=(lbIdx+1)%lbItems.length; showLb(lbIdx); }
+    if(e.key==='Escape')     { lb.classList.remove('open'); document.body.style.overflow=''; }
+  });
+
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    sections.forEach(s => { if(window.scrollY >= s.offsetTop - 120) cur = s.id; });
+    navLinks.forEach(a => {
+      a.classList.remove('active');
+      if(a.getAttribute('href') === '#' + cur) a.classList.add('active');
+    });
   });
 </script>
-
-<script src="script.js"></script>
 </body>
 </html>
