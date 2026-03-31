@@ -5,8 +5,132 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Kirinyaga University Red Cross Chapter</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Red+Hat+Display:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
   <link href="images/favicon.jpg" rel="icon" type="image/png"/>
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ── SWIPER HERO OVERRIDES ── */
+    #hero { padding: 0; margin: 0; }
+
+    .hero-wrapper {
+      position: relative;
+      width: 100%;
+      height: calc(100vh - 80px);
+      min-height: 600px;
+      overflow: hidden;
+    }
+    .hero-swiper { width: 100%; height: 100%; }
+    .swiper-wrapper-hero, .hero-swiper .swiper-slide { width: 100%; height: 100%; }
+    .hero-slide { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: 'Nunito Sans', sans-serif; }
+
+    .slide-bg {
+      position: absolute;
+      top: -10%; left: -10%; right: -10%; bottom: -10%;
+      background-size: cover; background-position: center;
+      transform: scale(1.12);
+    }
+    .hero-swiper .swiper-slide-active .slide-bg { animation: hKenburns 10s ease-out forwards; }
+    @keyframes hKenburns {
+      0%   { transform: scale(1.12); }
+      100% { transform: scale(1.0); }
+    }
+    .slide-bg::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to right, rgba(14,20,34,0.88) 0%, rgba(14,20,34,0.60) 45%, rgba(14,20,34,0.10) 100%);
+    }
+
+    .slide-person {
+      position: absolute; right: 0; bottom: 0;
+      height: 100%; width: 70%;
+      background-image: var(--person-img);
+      background-size: contain; background-repeat: no-repeat; background-position: right bottom;
+      z-index: 1;
+      filter: brightness(1.02) contrast(1.08) saturate(1.1);
+      transform: scale(1.12) translateX(40px);
+      opacity: 0;
+      transition: opacity 0.9s 0.2s ease;
+      -webkit-mask-image:
+        linear-gradient(to right,  transparent 0%, black 35%),
+        linear-gradient(to bottom, transparent 0%, black 12%),
+        linear-gradient(to top,    transparent 0%, black 8%);
+      -webkit-mask-composite: destination-in, destination-in;
+      mask-image:
+        linear-gradient(to right,  transparent 0%, black 35%),
+        linear-gradient(to bottom, transparent 0%, black 12%),
+        linear-gradient(to top,    transparent 0%, black 8%);
+      mask-composite: intersect;
+    }
+    .hero-swiper .swiper-slide-active .slide-person {
+      opacity: 1;
+      animation: hPersonKenburns 10s ease-out forwards;
+    }
+    @keyframes hPersonKenburns {
+      0%   { transform: scale(1.12) translateX(0px); }
+      100% { transform: scale(1.0)  translateX(0px); }
+    }
+
+    .slide-content {
+      position: absolute; inset: 0; z-index: 2;
+      display: flex; align-items: center; padding: 0 70px;
+    }
+    .slide-inner { max-width: 560px; color: #fff; }
+    .slide-subtitle {
+      font-size: 12px; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: rgba(255,255,255,0.75); margin-bottom: 18px;
+    }
+    .slide-inner h1 {
+      font-family: 'Red Hat Display', sans-serif;
+      font-size: 54px; font-weight: 900; line-height: 1.1;
+      color: #fff; margin-bottom: 20px;
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.7s 0.3s ease, transform 0.7s 0.3s ease;
+    }
+    .slide-inner p {
+      font-size: 16px; line-height: 1.75;
+      color: rgba(255,255,255,0.85); max-width: 440px; margin-bottom: 36px;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.7s 0.5s ease, transform 0.7s 0.5s ease;
+    }
+    .slide-buttons {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.7s 0.7s ease, transform 0.7s 0.7s ease;
+    }
+    .hero-swiper .swiper-slide-active .slide-inner h1,
+    .hero-swiper .swiper-slide-active .slide-inner p,
+    .hero-swiper .swiper-slide-active .slide-buttons { opacity: 1; transform: translateY(0); }
+    .slide-inner h1 span { color: #ed1c24; }
+
+    .hero-btn-primary {
+      background: #ed1c24; color: #fff; padding: 14px 36px; border: none;
+      font-size: 15px; font-weight: 700; border-radius: 4px;
+      text-decoration: none; cursor: pointer; transition: background 0.2s;
+    }
+    .hero-btn-primary:hover { background: #b00f0f; }
+    .hero-btn-outline {
+      background: transparent; color: #fff; padding: 13px 34px; border: 2px solid #fff;
+      font-size: 15px; font-weight: 700; border-radius: 4px;
+      text-decoration: none; cursor: pointer; transition: all 0.2s;
+    }
+    .hero-btn-outline:hover { background: #fff; color: #0e1422; }
+
+    .hero-wrapper .swiper-pagination { bottom: 24px !important; z-index: 10; }
+    .hero-wrapper .swiper-pagination-bullet { background: rgba(255,255,255,0.45); opacity: 1; width: 10px; height: 10px; }
+    .hero-wrapper .swiper-pagination-bullet-active { background: #ed1c24; }
+
+    .slider-progress { position: absolute; top: 0; left: 0; height: 4px; background: #ed1c24; width: 0%; z-index: 20; }
+    .slider-progress.animate { animation: hSlideProgress 10s linear forwards; }
+    @keyframes hSlideProgress { from { width: 0%; } to { width: 100%; } }
+
+    @media (max-width: 1024px) { .slide-person { width: 65%; } .slide-inner h1 { font-size: 42px; } }
+    @media (max-width: 768px) {
+      .hero-wrapper { height: calc(100svh - 80px); }
+      .slide-content { padding: 0 24px; }
+      .slide-inner h1 { font-size: 32px; }
+      .slide-person { width: 100%; opacity: 0.2 !important; }
+    }
+  </style>
 </head>
 <body>
 
@@ -37,85 +161,65 @@
   <a href="#contact" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Contact</a>
 </div>
 
-<!-- HERO SLIDESHOW -->
+<!-- ── NEW SWIPER HERO ── -->
 <section id="hero">
-  <div class="slides-wrapper">
+  <div class="hero-wrapper">
+    <div class="swiper hero-swiper">
+      <div class="swiper-wrapper">
 
-    <!-- Slide 1 -->
-    <div class="slide active">
-      <div class="slide-bg"></div>
-      <div class="slide-deco"></div>
-      <div class="slide-content">
-        <div class="hero-badge"><span class="dot"></span> Kirinyaga University · Red Cross Chapter</div>
-        <h1 class="hero-title">
-          <em>Ready to Help.</em>
-          Always.
-        </h1>
-        <p class="hero-tagline">Serving humanity through compassion, courage, and community care — right here on campus.</p>
-        <div class="hero-btns">
-          <a href="#about" class="btn-primary">Learn About Us</a>
-          <a href="#contact" class="btn-outline">Join the Chapter</a>
+        <!-- SLIDE 1 -->
+        <div class="swiper-slide hero-slide">
+          <div class="slide-bg" style="background-image: url('1.jpeg');"></div>
+          <div class="slide-person" style="--person-img: url('1p.png');"></div>
+          <div class="slide-content">
+            <div class="slide-inner">
+              <p class="slide-subtitle">Join Us Today</p>
+              <h1>Become a<br><span>Kirinyaga University Red Cross<br>Volunteer</span></h1>
+              <p>Serving humanity through compassion, courage, and community care — right here on campus.</p>
+              <div class="slide-buttons">
+                <a href="#about" class="hero-btn-primary">Learn About Us</a>
+                <a href="#contact" class="hero-btn-outline">Join the Chapter</a>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Slide 2 -->
-    <div class="slide">
-      <div class="slide-bg"></div>
-      <div class="slide-deco"></div>
-      <div class="slide-content">
-        <div class="hero-badge"><span class="dot"></span> First Aid · Blood Drives · Outreach</div>
-        <h1 class="hero-title">
-          <em>Compassion in</em>
-          Every Action.
-        </h1>
-        <p class="hero-tagline">From first aid training to community outreach — we show up when it matters most.</p>
-        <div class="hero-btns">
-          <a href="#events" class="btn-primary">See Our Events</a>
-          <a href="#contact" class="btn-outline">Volunteer With Us</a>
+        <!-- SLIDE 2 -->
+        <div class="swiper-slide hero-slide">
+          <div class="slide-bg" style="background-image: url('2.jpeg');"></div>
+          <div class="slide-content">
+            <div class="slide-inner">
+              <p class="slide-subtitle">First Aid · Blood Drives · Outreach</p>
+              <h1><span>Compassion in</span><br>Every Action</h1>
+              <p>From first aid training to community outreach — we show up when it matters most.</p>
+              <div class="slide-buttons">
+                <a href="#events" class="hero-btn-primary">See Our Events</a>
+                <a href="#contact" class="hero-btn-outline">Volunteer With Us</a>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Slide 3 -->
-    <div class="slide">
-      <div class="slide-bg"></div>
-      <div class="slide-deco"></div>
-      <div class="slide-content">
-        <div class="hero-badge"><span class="dot"></span> Humanity · Impartiality · Neutrality</div>
-        <h1 class="hero-title">
-          <em>One Chapter.</em>
-          Countless Lives.
-        </h1>
-        <p class="hero-tagline">United by the seven fundamental principles of the Red Cross Movement, we serve without boundaries.</p>
-        <div class="hero-btns">
-          <a href="#about" class="btn-primary">Our Mission</a>
-          <a href="#team" class="btn-outline">Meet the Team</a>
+        <!-- SLIDE 3 -->
+        <div class="swiper-slide hero-slide">
+          <div class="slide-bg" style="background-image: url('3.jpeg');"></div>
+          <div class="slide-content">
+            <div class="slide-inner">
+              <p class="slide-subtitle">Humanity · Impartiality · Neutrality</p>
+              <h1>One Chapter.<br><span>Countless Lives.</span></h1>
+              <p>United by the seven fundamental principles of the Red Cross Movement, we serve without boundaries.</p>
+              <div class="slide-buttons">
+                <a href="#about" class="hero-btn-primary">Our Mission</a>
+                <a href="#team" class="hero-btn-outline">Meet the Team</a>
+              </div>
+            </div>
+          </div>
         </div>
+
       </div>
+      <div class="swiper-pagination"></div>
     </div>
-
-    <!-- Controls -->
-    <button class="slide-arrow prev" onclick="changeSlide(-1)" aria-label="Previous">&#8592;</button>
-    <button class="slide-arrow next" onclick="changeSlide(1)" aria-label="Next">&#8594;</button>
-
-    <!-- Dots -->
-    <div class="slide-dots">
-      <button class="dot-btn active" onclick="goToSlide(0)"></button>
-      <button class="dot-btn" onclick="goToSlide(1)"></button>
-      <button class="dot-btn" onclick="goToSlide(2)"></button>
-    </div>
-
-    <!-- Progress bar -->
-    <div class="slide-progress"><div class="slide-progress-bar" id="progressBar"></div></div>
-
-    <!-- Stats -->
-    <div class="hero-stats">
-      <div class="stat"><div class="stat-num">200+</div><div class="stat-label">Active Members</div></div>
-      <div class="stat"><div class="stat-num">50+</div><div class="stat-label">Events Held</div></div>
-      <div class="stat"><div class="stat-num">5+</div><div class="stat-label">Years of Service</div></div>
-    </div>
-
+    <div class="slider-progress" id="sliderProgress"></div>
   </div>
 </section>
 
@@ -167,7 +271,7 @@
         <span class="event-tag">First Aid</span>
       </div>
       <div class="event-body">
-        <h3>Basic First Aid & CPR Training</h3>
+        <h3>Basic First Aid &amp; CPR Training</h3>
         <p>Open to all university students. Learn life-saving skills including CPR, wound management, and emergency response protocols.</p>
         <div class="event-meta">
           <span>Main Hall, KYU</span>
@@ -214,66 +318,39 @@
   <div class="team-grid">
     <div class="member-card reveal">
       <img class="member-avatar" src="images/Dennis.jpeg" alt="Chairperson - Dennis Kiptanui" />
-      <div class="member-info">
-        <h3>Chairperson</h3>
-        <div class="role">DENNIS KIPTANUI</div>
-      </div>
+      <div class="member-info"><h3>Chairperson</h3><div class="role">DENNIS KIPTANUI</div></div>
     </div>
     <div class="member-card reveal">
       <img class="member-avatar" src="images/Ian.jpeg" alt="Vice Chairperson - Ian Kamau" />
-      <div class="member-info">
-        <h3>Vice Chairperson</h3>
-        <div class="role">IAN KAMAU</div>
-      </div>
+      <div class="member-info"><h3>Vice Chairperson</h3><div class="role">IAN KAMAU</div></div>
     </div>
     <div class="member-card reveal">
       <img class="member-avatar" src="images/Mary1.jpeg" alt="Secretary - Mary Kahora" />
-      <div class="member-info">
-        <h3>Secretary</h3>
-        <div class="role">MARY KAHORA</div>
-      </div>
+      <div class="member-info"><h3>Secretary</h3><div class="role">MARY KAHORA</div></div>
     </div>
     <div class="member-card reveal">
       <img class="member-avatar" src="images/Tabitha.jpeg" alt="Treasurer - Tabitha Cherotich" />
-      <div class="member-info">
-        <h3>Treasurer</h3>
-        <div class="role">TABITHA CHEROTICH</div>
-      </div>
+      <div class="member-info"><h3>Treasurer</h3><div class="role">TABITHA CHEROTICH</div></div>
     </div>
     <div class="member-card reveal">
       <img class="member-avatar" src="images/ken2.jpeg" alt="First Aid Officer - Kennedy Macharia" />
-      <div class="member-info">
-        <h3>First Aid Officer</h3>
-        <div class="role">KENNEDY MACHARIA</div>
-      </div>
+      <div class="member-info"><h3>First Aid Officer</h3><div class="role">KENNEDY MACHARIA</div></div>
     </div>
     <div class="member-card reveal">
       <img class="member-avatar" src="images/Portfolio .jpg" alt="Asst. First Aid Officer - Francis Lobun" />
-      <div class="member-info">
-        <h3>Asst. First Aid Officer</h3>
-        <div class="role">FRANCIS LOBUN</div>
-      </div>
+      <div class="member-info"><h3>Asst. First Aid Officer</h3><div class="role">FRANCIS LOBUN</div></div>
     </div>
     <div class="member-card reveal">
       <img class="member-avatar" src="images/Amos.jpeg" alt="Organising Secretary - Amos Maliro" />
-      <div class="member-info">
-        <h3>Organising Secretary</h3>
-        <div class="role">AMOS MALIRO</div>
-      </div>
+      <div class="member-info"><h3>Organising Secretary</h3><div class="role">AMOS MALIRO</div></div>
     </div>
     <div class="member-card reveal">
       <img class="member-avatar" src="images/Holinda.jpeg" alt="Dissemination Officer - Holinda Kiarie" />
-      <div class="member-info">
-        <h3>DISEMINATION OFFICER</h3>
-        <div class="role">HOLINDA KIARIE</div>
-      </div>
+      <div class="member-info"><h3>DISEMINATION OFFICER</h3><div class="role">HOLINDA KIARIE</div></div>
     </div>
     <div class="member-card reveal">
       <img class="member-avatar" src="images/Orange.jpeg" alt="IT Personnel - Orange" />
-      <div class="member-info">
-        <h3>IT Personnel</h3>
-        <div class="role">ORANGE</div>
-      </div>
+      <div class="member-info"><h3>IT Personnel</h3><div class="role">ORANGE</div></div>
     </div>
   </div>
 </section>
@@ -290,25 +367,18 @@
     </div>
     <div class="gallery-item">
       <img src="images/Red Cross Team.png" alt="Donation Drive" />
-      <!-- <div class="gallery-icon">🩸</div> -->
-      <!-- <div class="overlay"><span>🔍</span></div> -->
       <div class="gallery-label">Blood Donation Drive</div>
     </div>
     <div class="gallery-item">
       <img src="images/community.jpeg" alt="Community Outreach" />
-      <!-- <div class="gallery-icon">🤝</div> -->
-      <!-- <div class="overlay"><span>🔍</span></div> -->
       <div class="gallery-label">Community Outreach</div>
     </div>
     <div class="gallery-item">
       <img src="images/Awareness.jpeg" alt="Campus Awareness Week" />
-      <!-- <div class="gallery-icon">🏫</div> -->
-      <!-- <div class="overlay"><span>🔍</span></div> -->
       <div class="gallery-label">Campus Awareness Week</div>
     </div>
     <div class="gallery-item">
       <img src="images/gallery-leadership-workshop.jpg" alt="Leadership Workshop" />
-      <!-- <div class="gallery-icon">🎓</div> -->
       <div class="overlay"><span>🔍</span></div>
       <div class="gallery-label">Leadership Workshop</div>
     </div>
@@ -334,7 +404,7 @@
           <div class="icon">📧</div>
           <div class="text">
             <h4>Email</h4>
-            <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8cfee9e8effee3ffffcce7f5f9a2edefa2e7e9">[email&#160;protected]</a></p>
+            <p>redcross@kyu.ac.ke</p>
           </div>
         </div>
         <div class="contact-item">
@@ -414,6 +484,28 @@
     <p>Made with <span>♥</span> by the KYU Red Cross Chapter</p>
   </div>
 </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  const progressBar = document.getElementById('sliderProgress');
+  function resetProgress() {
+    progressBar.classList.remove('animate');
+    void progressBar.offsetWidth;
+    progressBar.classList.add('animate');
+  }
+  const heroSwiper = new Swiper('.hero-swiper', {
+    effect: 'fade',
+    fadeEffect: { crossFade: true },
+    loop: true,
+    autoplay: { delay: 10000, disableOnInteraction: false },
+    speed: 800,
+    pagination: { el: '.swiper-pagination', clickable: true },
+    on: {
+      init()                       { resetProgress(); },
+      slideChangeTransitionStart() { resetProgress(); },
+    }
+  });
+</script>
 <script src="script.js"></script>
 </body>
 </html>
